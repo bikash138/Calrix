@@ -200,7 +200,6 @@ export default function WorkflowTabs() {
                   fill
                   sizes="(max-width: 1152px) 100vw, 1152px"
                   className="object-cover"
-                  placeholder="blur"
                 />
               )}
               <MetricCard tab={tab} />

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import backgroundImg from "@/assets/landing/background-image.png";
+import backgroundImg from "@/assets/landing/background-image.webp";
 import { cn } from "@/lib/utils";
 import {
   LogOut,
