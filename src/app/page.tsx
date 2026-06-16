@@ -1,12 +1,12 @@
 import Navbar from "@/components/landing/navbar";
-import Separator from "@/components/landing/separator";
+import Separator from "@/components/landing/core/separator";
 import HeroSection from "@/components/landing/hero-section";
-import OurStorySection from "@/components/landing/sections/our-story-section";
-import WorkflowSection from "@/components/landing/sections/workflow-section";
-import ComparisonSection from "@/components/landing/sections/comparison-section";
-import PricingSection from "@/components/landing/sections/pricing-section";
-import HowWeBuiltItSection from "@/components/landing/sections/how-we-built-it-section";
-import FooterSection from "@/components/landing/sections/footer-section";
+import OurStorySection from "@/components/landing/our-story-section";
+import WorkflowSection from "@/components/landing/workflow-section";
+import ComparisonSection from "@/components/landing/comparison-section";
+import PricingSection from "@/components/landing/pricing-section";
+import HowWeBuiltItSection from "@/components/landing/how-we-built-it-section";
+import FooterSection from "@/components/landing/footer-section";
 
 export default function Home() {
   return (
