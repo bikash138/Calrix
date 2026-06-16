@@ -1,0 +1,10 @@
+export const NON_PRIMARY_LABELS = new Set([
+  "CATEGORY_SOCIAL",
+  "CATEGORY_PROMOTIONS",
+  "CATEGORY_FORUMS",
+  "CATEGORY_UPDATES",
+  "SENT",
+  "DRAFT",
+  "SPAM",
+  "TRASH",
+]);
