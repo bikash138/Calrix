@@ -1,10 +1,14 @@
-import { streamText, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { createEmailsTools } from "@/server/module/emails/emails.tools";
-import { getChatSystemPrompt } from "@/server/data/prompt/chat.prompt";
+import { streamText, stepCountIs } from "ai";
+import {
+  DEFAULT_AI,
+  DEFAULT_CALENDAR,
+  DEFAULT_INBOX,
+} from "@/server/db/schema/settings";
 import { settingsRepo } from "@/server/module/settings/settings.repo";
-import { DEFAULT_AI, DEFAULT_CALENDAR, DEFAULT_INBOX } from "@/server/db/schema/settings";
 import type { ChatRequest } from "./chat.schema";
+import { createEmailsTools } from "@/server/ai/tool";
+import { getChatSystemPrompt } from "@/server/ai/prompts/chat.prompt";
 
 export const chatService = {
   stream: async (
@@ -23,7 +27,14 @@ export const chatService = {
     const calendar = userPrefs?.calendar ?? DEFAULT_CALENDAR;
     const inbox = userPrefs?.inbox ?? DEFAULT_INBOX;
 
-    const tools = await createEmailsTools(userId, userName, timezone, currentDate, inbox.signature, calendar);
+    const tools = await createEmailsTools(
+      userId,
+      userName,
+      timezone,
+      currentDate,
+      inbox.signature,
+      calendar,
+    );
 
     const result = streamText({
       model: openai("gpt-5-mini"),

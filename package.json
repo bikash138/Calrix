@@ -17,11 +17,15 @@
     "dev:inngest": "npx inngest-cli@latest dev -u http://localhost:3000/api/inngest"
   },
   "dependencies": {
+    "@ai-sdk/mcp": "^1.0.51",
+    "@ai-sdk/openai": "^3.0.71",
     "@better-auth/drizzle-adapter": "^1.6.18",
     "@corsair-dev/cli": "^0.1.19",
     "@corsair-dev/gmail": "^0.1.4",
     "@corsair-dev/googlecalendar": "^0.1.4",
     "@corsair-dev/mcp": "^0.1.22",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "ai": "^6.0.205",
     "better-auth": "^1.6.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
