@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getSession } from "@/server/better-auth/session";
 import { ApiError } from "@/server/errors/api.error";
 import { ErrorCode } from "@/server/errors/error.types";
+import { rateLimiters, type RateLimitTier } from "@/server/lib/rate-limit";
 import { errorResponse } from "./response";
 
 type AuthUser = NonNullable<Awaited<ReturnType<typeof getSession>>>["user"];
@@ -15,14 +16,22 @@ type HandlerContext<TBody> = {
 
 type HandlerConfig<TBody = undefined> = {
   auth?: boolean;
+  rateLimit?: RateLimitTier;
   schema?: z.ZodType<TBody>;
   handler: (ctx: HandlerContext<TBody>) => Promise<Response>;
 };
 
-// Rate limit stub — wire up Upstash or similar here when ready
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function applyRateLimit(_req: NextRequest): Promise<void> {
-  // TODO: implement rate limiting
+async function applyRateLimit(
+  req: NextRequest,
+  tier: RateLimitTier,
+  userId?: string,
+): Promise<void> {
+  const key = userId ?? req.headers.get("x-forwarded-for") ?? "anonymous";
+  try {
+    await rateLimiters[tier].consume(key);
+  } catch {
+    throw ApiError.tooManyRequests();
+  }
 }
 
 export function createHandler<TBody = undefined>(
@@ -30,14 +39,14 @@ export function createHandler<TBody = undefined>(
 ): (req: NextRequest) => Promise<Response> {
   return async (req: NextRequest) => {
     try {
-      await applyRateLimit(req);
-
       let user: AuthUser | null = null;
       if (config.auth) {
         const session = await getSession();
         if (!session) throw ApiError.unauthorized();
         user = session.user;
       }
+
+      await applyRateLimit(req, config.rateLimit ?? "default", user?.id);
 
       let body = undefined as TBody;
       if (config.schema) {

@@ -3,7 +3,7 @@ import { googlecalendar } from "@corsair-dev/googlecalendar";
 import { createCorsair } from "corsair";
 import { eq } from "drizzle-orm";
 import { env } from "@/env";
-import { NON_PRIMARY_LABELS } from "@/lib/gmail-labels";
+import { NON_PRIMARY_LABELS } from "@/server/lib/gmail-labels";
 import { conn, db } from "./db";
 import { user } from "./db/schema/auth";
 import { inngest } from "./inngest/client";

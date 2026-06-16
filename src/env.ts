@@ -9,9 +9,14 @@ const envSchema = z
       })
       .default("development"),
     FRONTEND_URL: z.url({ error: "FRONTEND_URL must be a valid URL" }),
+
     DATABASE_URL: z
       .string({ error: "DATABASE_URL is required" })
       .min(1, "DATABASE_URL cannot be empty"),
+
+    REDIS_URL: z
+      .string({ error: "REDIS_URL is required" })
+      .min(1, "REDIS_URL cannot be empty"),
 
     OPENAI_API_KEY: z
       .string({ error: "OPENAI_API_KEY is required" })
