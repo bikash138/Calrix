@@ -23,7 +23,7 @@ import {
   PRIVACY_OPTIONS,
 } from "@/data/onboarding";
 
-const emailSchema = z.string().email();
+const emailSchema = z.email();
 const nameSchema = z
   .string()
   .min(1)
