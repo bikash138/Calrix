@@ -1,6 +1,9 @@
 import type { CalendarSettings } from "@/server/db/schema/settings";
 
-export type CalendarAgentPrefs = Pick<CalendarSettings, "workdayStart" | "workdayEnd" | "weekStartsOn" | "meetingBuffer">;
+export type CalendarAgentPrefs = Pick<
+  CalendarSettings,
+  "workdayStart" | "workdayEnd" | "weekStartsOn" | "meetingBuffer"
+>;
 
 export function getCalendarAgentPrompt(
   currentDate: string,
@@ -8,15 +11,20 @@ export function getCalendarAgentPrompt(
   prefs: CalendarAgentPrefs,
 ): string {
   const bufferMinutes =
-    prefs.meetingBuffer === "none" ? 0
-    : prefs.meetingBuffer === "15min" ? 15
-    : prefs.meetingBuffer === "30min" ? 30
-    : prefs.meetingBuffer === "45min" ? 45
-    : 60;
+    prefs.meetingBuffer === "none"
+      ? 0
+      : prefs.meetingBuffer === "15min"
+        ? 15
+        : prefs.meetingBuffer === "30min"
+          ? 30
+          : prefs.meetingBuffer === "45min"
+            ? 45
+            : 60;
 
-  const bufferRule = bufferMinutes > 0
-    ? `Leave at least ${prefs.meetingBuffer} free before and after each meeting — a slot is only valid if existing events end at least ${bufferMinutes} minutes before it starts and it ends at least ${bufferMinutes} minutes before the next event.`
-    : "No buffer required between meetings.";
+  const bufferRule =
+    bufferMinutes > 0
+      ? `Leave at least ${prefs.meetingBuffer} free before and after each meeting — a slot is only valid if existing events end at least ${bufferMinutes} minutes before it starts and it ends at least ${bufferMinutes} minutes before the next event.`
+      : "No buffer required between meetings.";
 
   return `You are a Google Calendar agent. You receive a task, discover the right endpoint via MCP tools, and execute it.
 
