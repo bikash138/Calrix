@@ -4,9 +4,9 @@ import { createBaseMcpServer } from "@corsair-dev/mcp";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory";
 import { corsair } from "@/server/corsair";
 import { DEFAULT_CALENDAR } from "@/server/db/schema/settings";
-import { CalendarAgentPrefs } from "./prompts/calendar-agent.prompt";
-import { buildEmailComposerAgent } from "./agents/email-composer.agent";
-import { buildCalendarAgent } from "./agents/calendar.agent";
+import { CalendarAgentPrefs } from "../prompts/calendar-agent.prompt";
+import { buildEmailComposerAgent } from "../agents/email-composer.agent";
+import { buildCalendarAgent } from "../agents/calendar.agent";
 
 export async function createEmailsTools(
   userId: string,

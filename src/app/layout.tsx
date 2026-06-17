@@ -8,6 +8,7 @@ import {
 } from "next/font/google";
 // import { GlobalProviders } from "@/components/providers/global";
 import "./globals.css";
+import { GlobalProviders } from "@/components/providers/global";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -118,7 +119,9 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${bodyFont.variable} ${displayFont.variable} ${monoFont.variable} ${interFont.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <GlobalProviders>{children}</GlobalProviders>
+      </body>
     </html>
   );
 }
