@@ -16,8 +16,11 @@ import {
   TopBarExtrasRight,
 } from "@/components/main/top-bar-extras";
 import { MobileBottomNav } from "@/components/main/mobile-bottom-nav";
+import { NotificationBell } from "@/components/main/notification-bell";
+import { UrgentEmailsProvider } from "@/components/main/urgent-emails-provider";
 import { ACTIONS_QUERY_KEY } from "@/components/main/actions-count-provider";
 import { WorkspaceProviders } from "@/components/providers/workspace";
+import { Toaster } from "@/components/ui/sonner";
 import {
   LoadingScreen,
   type LoadingStep,
@@ -170,6 +173,7 @@ export default function MainLayout({
         user={initData.user}
         preferences={initData.preferences}
       >
+        <UrgentEmailsProvider>
         <SidebarProvider
           className="h-screen overflow-hidden"
           style={
@@ -188,6 +192,7 @@ export default function MainLayout({
               <TopBarExtrasLeft />
               <div className="ml-auto flex items-center gap-2">
                 <TopBarExtrasRight />
+                {pathname !== "/inbox" && <NotificationBell />}
                 {pathname !== "/chat" && <CommandBar />}
               </div>
             </div>
@@ -197,6 +202,8 @@ export default function MainLayout({
             <MobileBottomNav />
           </SidebarInset>
         </SidebarProvider>
+        <Toaster position="top-right" />
+        </UrgentEmailsProvider>
       </WorkspaceProviders>
     </ThemeProvider>
   );

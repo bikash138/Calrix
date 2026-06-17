@@ -309,12 +309,10 @@ function MeetingCard({
   requests,
   onAccept,
   onDecline,
-  onAcceptAll,
 }: {
   requests: ActionItem[];
   onAccept: (id: string) => void;
   onDecline: (id: string) => void;
-  onAcceptAll: () => void;
 }) {
   const [tab, setTab] = useState<"today" | "requests">("today");
 
@@ -345,14 +343,6 @@ function MeetingCard({
             Meetings
           </span>
         </div>
-        {tab === "requests" && requests.length > 0 && (
-          <button
-            onClick={onAcceptAll}
-            className="text-[0.65rem] font-medium text-muted-foreground/60 transition-colors hover:text-foreground"
-          >
-            Accept all
-          </button>
-        )}
       </div>
 
       {/* Tabs */}
@@ -531,7 +521,6 @@ export default function ActionsPage() {
               setActive(meeting.find((m) => m.id === id) ?? null)
             }
             onDecline={(id) => dismiss(id)}
-            onAcceptAll={() => dismiss(...meeting.map((i) => i.id))}
           />
 
           {/* ── Needs Approval ───────────────────────────────────── */}

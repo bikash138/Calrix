@@ -3,7 +3,6 @@ import { googlecalendar } from "@corsair-dev/googlecalendar";
 import { createCorsair } from "corsair";
 import { eq } from "drizzle-orm";
 import { env } from "@/env";
-import { NON_PRIMARY_LABELS } from "@/server/lib/gmail-labels";
 import { conn, db } from "./db";
 import { user } from "./db/schema/auth";
 import { inngest } from "./inngest/client";
@@ -18,19 +17,6 @@ export const corsair = createCorsair({
             if (!result?.data || result.data.type !== "messageReceived") return;
 
             const event = result.data as MessageReceivedEvent;
-            const labels: string[] =
-              (event.message as { labelIds?: string[] }).labelIds ?? [];
-
-            // Drop anything not in the primary inbox
-            if (
-              !labels.includes("INBOX") ||
-              labels.some((l) => NON_PRIMARY_LABELS.has(l))
-            ) {
-              return;
-            }
-
-            const messageId = (event.message as { id?: string }).id;
-            if (!messageId) return;
 
             // Resolve userId from the emailAddress in the event
             const userRow = await db
@@ -40,10 +26,24 @@ export const corsair = createCorsair({
               .limit(1);
 
             if (!userRow[0]) return;
+            const userId = userRow[0].id;
+
+            // corsair delivers an empty `message` (only emailAddress + historyId),
+            // so resolve the newest INBOX message ourselves. The watch is
+            // INBOX-scoped and each new mail fires its own push, so the latest
+            // INBOX message is the one that triggered this. The email/received
+            // pipeline does the authoritative label + relevance filtering.
+            const tenant = corsair.withTenant(userId);
+            const list = await tenant.gmail.api.messages.list({
+              labelIds: ["INBOX"],
+              maxResults: 1,
+            });
+            const messageId = list.messages?.[0]?.id;
+            if (!messageId) return;
 
             await inngest.send({
               name: "email/received" as const,
-              data: { userId: userRow[0].id, messageId },
+              data: { userId, messageId },
             });
           },
         },

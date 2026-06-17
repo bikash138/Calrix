@@ -81,6 +81,10 @@ export function useTriageSync(userId: string) {
     topics: ["triage-progress"],
     token: sseApi.getRealtimeToken,
     enabled: Boolean(userId),
+    // The token grants both channel topics, so this subscription also receives
+    // `urgent-email` messages. Client-side validation crashes because the Zod
+    // schema can't survive JSON serialization to the browser — skip it.
+    validate: false,
   });
 
   // The realtime hook widens `byTopic` to a union that doesn't always expose

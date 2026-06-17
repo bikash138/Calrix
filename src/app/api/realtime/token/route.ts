@@ -9,7 +9,7 @@ export const GET = createHandler({
   handler: async ({ user }) => {
     const token = await getSubscriptionToken(inngest, {
       channel: notificationChannel({ userId: user.id }),
-      topics: ["triage-progress"],
+      topics: ["triage-progress", "urgent-email"],
     });
 
     return NextResponse.json({ token });

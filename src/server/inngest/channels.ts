@@ -15,16 +15,16 @@ export type TriageProgress = z.infer<typeof triageProgressSchema>;
 export const notificationChannel = channel({
   name: ({ userId }: { userId: string }) => `user:${userId}`,
   topics: {
-    // "urgent-email": {
-    //   schema: z.object({
-    //     messageId: z.string(),
-    //     from: z.string(),
-    //     subject: z.string(),
-    //     urgency: z.enum(["critical", "high", "normal"]),
-    //     category: z.enum(["reply", "approval", "meeting"]),
-    //     aiSummary: z.string(),
-    //   }),
-    // },
+    "urgent-email": {
+      schema: z.object({
+        messageId: z.string(),
+        from: z.string(),
+        subject: z.string(),
+        urgency: z.enum(["critical", "high", "normal"]),
+        category: z.enum(["reply", "approval", "meeting"]),
+        aiSummary: z.string(),
+      }),
+    },
     "triage-progress": {
       schema: triageProgressSchema,
     },
