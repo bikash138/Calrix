@@ -10,7 +10,10 @@ export type ActionItem = InferSelectModel<typeof actionItems>;
 export const actionsApi = {
   getAll: async (status?: ActionStatus): Promise<ActionItem[]> => {
     const params = status ? { status } : {};
-    const { data } = await apiClient.get<ApiResponse<ActionItem[]>>("/api/actions", { params });
+    const { data } = await apiClient.get<ApiResponse<ActionItem[]>>(
+      "/api/actions",
+      { params },
+    );
     return data.data;
   },
 
@@ -18,8 +21,20 @@ export const actionsApi = {
     await apiClient.patch("/api/actions", { id, status });
   },
 
+  getTriageQuota: async (): Promise<{
+    remaining: number;
+    resetInMs: number;
+  }> => {
+    const { data } = await apiClient.get<
+      ApiResponse<{ remaining: number; resetInMs: number }>
+    >("/api/actions/triage");
+    return data.data;
+  },
+
   triggerTriage: async (): Promise<{ eventId: string }> => {
-    const { data } = await apiClient.post<ApiResponse<{ eventId: string }>>("/api/actions/triage");
+    const { data } = await apiClient.post<ApiResponse<{ eventId: string }>>(
+      "/api/actions/triage",
+    );
     return data.data;
   },
 
