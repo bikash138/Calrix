@@ -79,17 +79,24 @@ export const auth = betterAuth({
               const tenant = corsair.withTenant(account.userId);
               const expiresAt = tokenExpirySeconds(account);
 
+              const accessToken = account.accessToken;
+              const refreshToken = account.refreshToken;
+
               await Promise.all([
-                tenant.gmail.keys.set_access_token(account.accessToken),
-                tenant.gmail.keys.set_refresh_token(account.refreshToken),
-                tenant.gmail.keys.set_expires_at(expiresAt),
-                tenant.googlecalendar.keys.set_access_token(
-                  account.accessToken,
-                ),
-                tenant.googlecalendar.keys.set_refresh_token(
-                  account.refreshToken,
-                ),
-                tenant.googlecalendar.keys.set_expires_at(expiresAt),
+                (async () => {
+                  await tenant.gmail.keys.set_access_token(accessToken);
+                  await tenant.gmail.keys.set_refresh_token(refreshToken);
+                  await tenant.gmail.keys.set_expires_at(expiresAt);
+                })(),
+                (async () => {
+                  await tenant.googlecalendar.keys.set_access_token(
+                    accessToken,
+                  );
+                  await tenant.googlecalendar.keys.set_refresh_token(
+                    refreshToken,
+                  );
+                  await tenant.googlecalendar.keys.set_expires_at(expiresAt);
+                })(),
               ]);
 
               const watchRes = await fetch(
@@ -166,20 +173,28 @@ export const auth = betterAuth({
             try {
               const tenant = corsair.withTenant(account.userId);
               const expiresAt = tokenExpirySeconds(account);
+              const accessToken = account.accessToken;
+              const refreshToken = account.refreshToken ?? null;
               await Promise.all([
-                tenant.gmail.keys.set_access_token(account.accessToken),
-                tenant.gmail.keys.set_expires_at(expiresAt),
-                tenant.googlecalendar.keys.set_access_token(
-                  account.accessToken,
-                ),
-                tenant.googlecalendar.keys.set_expires_at(expiresAt),
+                (async () => {
+                  await tenant.gmail.keys.set_access_token(accessToken);
+                  await tenant.gmail.keys.set_expires_at(expiresAt);
+                  if (refreshToken) {
+                    await tenant.gmail.keys.set_refresh_token(refreshToken);
+                  }
+                })(),
+                (async () => {
+                  await tenant.googlecalendar.keys.set_access_token(
+                    accessToken,
+                  );
+                  await tenant.googlecalendar.keys.set_expires_at(expiresAt);
+                  if (refreshToken) {
+                    await tenant.googlecalendar.keys.set_refresh_token(
+                      refreshToken,
+                    );
+                  }
+                })(),
               ]);
-              if (account.refreshToken) {
-                await tenant.gmail.keys.set_refresh_token(account.refreshToken);
-                await tenant.googlecalendar.keys.set_refresh_token(
-                  account.refreshToken,
-                );
-              }
               invalidateMcpCache(account.userId);
             } catch (err) {
               console.error("[auth] token refresh failed", err);
