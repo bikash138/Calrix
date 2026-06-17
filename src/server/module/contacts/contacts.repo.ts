@@ -72,30 +72,48 @@ export const contactsRepo = {
     if (!q) return [];
     const contains = `%${q}%`;
 
-    return db
-      .select({ name: contacts.name, email: contacts.email })
-      .from(contacts)
-      .where(
-        and(
-          eq(contacts.userId, userId),
-          sql`(
-            ${contacts.name} ILIKE ${contains}
-            OR ${contacts.email} ILIKE ${contains}
-            OR ${contacts.name} % ${q}
-          )`,
-        ),
-      )
-      .orderBy(
-        desc(
-          sql`GREATEST(
-            similarity(${contacts.name}, ${q}),
-            word_similarity(${q}, ${contacts.name}),
-            word_similarity(${q}, ${contacts.email})
-          )`,
-        ),
-        desc(contacts.interactionCount),
-        desc(contacts.lastSeenAt),
-      )
-      .limit(limit);
+    try {
+      return await db
+        .select({ name: contacts.name, email: contacts.email })
+        .from(contacts)
+        .where(
+          and(
+            eq(contacts.userId, userId),
+            sql`(
+              ${contacts.name} ILIKE ${contains}
+              OR ${contacts.email} ILIKE ${contains}
+              OR ${contacts.name} % ${q}::text
+            )`,
+          ),
+        )
+        .orderBy(
+          desc(
+            sql`GREATEST(
+              similarity(${contacts.name}, ${q}::text),
+              word_similarity(${q}::text, ${contacts.name}),
+              word_similarity(${q}::text, ${contacts.email})
+            )`,
+          ),
+          desc(contacts.interactionCount),
+          desc(contacts.lastSeenAt),
+        )
+        .limit(limit);
+    } catch {
+      // pg_trgm extension not installed — fall back to plain ILIKE
+      return db
+        .select({ name: contacts.name, email: contacts.email })
+        .from(contacts)
+        .where(
+          and(
+            eq(contacts.userId, userId),
+            sql`(
+              ${contacts.name} ILIKE ${contains}
+              OR ${contacts.email} ILIKE ${contains}
+            )`,
+          ),
+        )
+        .orderBy(desc(contacts.interactionCount), desc(contacts.lastSeenAt))
+        .limit(limit);
+    }
   },
 };
