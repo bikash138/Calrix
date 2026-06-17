@@ -1,4 +1,5 @@
 // Enums
+
 export const InboxView = {
   ALL: "all",
   UNREAD: "unread",
@@ -112,6 +113,7 @@ export const UrgencySignal = {
 export type UrgencySignal = (typeof UrgencySignal)[keyof typeof UrgencySignal];
 
 // Section types
+
 export type InboxSettings = {
   defaultView: InboxView;
   signature: string;
@@ -125,6 +127,7 @@ export type CalendarSettings = {
   workdayStart: WorkdayStart;
   workdayEnd: WorkdayEnd;
   meetingBuffer: MeetingBuffer;
+  timezone: string;
 };
 
 export type AISettings = {
@@ -143,6 +146,9 @@ export type UserPreferences = {
 };
 
 // Defaults
+
+export const DEFAULT_TIMEZONE = "Asia/Kolkata";
+
 export const DEFAULT_INBOX: InboxSettings = {
   defaultView: InboxView.ALL,
   signature: "",
@@ -156,6 +162,7 @@ export const DEFAULT_CALENDAR: CalendarSettings = {
   workdayStart: WorkdayStart.AM_9,
   workdayEnd: WorkdayEnd.PM_6,
   meetingBuffer: MeetingBuffer.MIN_30,
+  timezone: DEFAULT_TIMEZONE,
 };
 
 export const DEFAULT_AI: AISettings = {

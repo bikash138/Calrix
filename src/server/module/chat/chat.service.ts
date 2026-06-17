@@ -7,7 +7,7 @@ import {
 } from "@/server/db/schema/settings";
 import { settingsRepo } from "@/server/module/settings/settings.repo";
 import type { ChatRequest } from "./chat.schema";
-import { createEmailsTools } from "@/server/ai/tool";
+import { createEmailsTools } from "@/server/ai/tools/tool";
 import { getChatSystemPrompt } from "@/server/ai/prompts/chat.prompt";
 
 export const chatService = {

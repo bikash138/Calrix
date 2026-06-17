@@ -19,6 +19,7 @@
   "dependencies": {
     "@ai-sdk/mcp": "^1.0.51",
     "@ai-sdk/openai": "^3.0.71",
+    "@ai-sdk/react": "^3.0.208",
     "@better-auth/drizzle-adapter": "^1.6.18",
     "@corsair-dev/cli": "^0.1.19",
     "@corsair-dev/gmail": "^0.1.4",

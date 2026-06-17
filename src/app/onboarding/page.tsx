@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { z } from "zod";
 import { LogoWithText } from "@/assets/logo-with-text";
+import { LogoMark } from "@/assets/logo";
 import {
   type Role,
   type Volume,
@@ -23,7 +24,7 @@ import {
   PRIVACY_OPTIONS,
 } from "@/data/onboarding";
 
-const emailSchema = z.email();
+const emailSchema = z.string().email();
 const nameSchema = z
   .string()
   .min(1)
@@ -36,6 +37,7 @@ function isValidVIP(val: string): boolean {
 }
 
 //Step components
+
 function StepRole({
   value,
   otherValue,
@@ -498,7 +500,12 @@ export default function OnboardingPage() {
     if (step < TOTAL_STEPS - 1) {
       setStep((s) => s + 1);
     } else {
-      sessionStorage.setItem("calrix_onboarding", JSON.stringify(form));
+      const timezone =
+        Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+      sessionStorage.setItem(
+        "calrix_onboarding",
+        JSON.stringify({ ...form, timezone }),
+      );
       document.cookie = "onboarding_pending=1; path=/; max-age=120";
       router.push("/chat");
     }
@@ -568,9 +575,7 @@ export default function OnboardingPage() {
             {/* Step label + heading */}
             <div className="mb-8">
               <div className="mb-3 flex items-center gap-3">
-                <span className="grid h-7 w-7 place-items-center rounded-sm bg-accent font-display text-sm font-bold text-white">
-                  C
-                </span>
+                <LogoMark size={28} className="rounded-sm" />
                 <p className="font-mono text-xs font-semibold uppercase tracking-widest text-muted">
                   {meta.label}
                 </p>

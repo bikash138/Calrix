@@ -6,11 +6,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePreferencesStore } from "@/store/preferences.store";
 import { settingsApi } from "@/lib/api-client/settings.api";
 import { Button } from "@/components/ui/button";
-import type {
-  InboxSettings,
-  CalendarSettings,
-  AISettings,
-  UserPreferences,
+import {
+  DEFAULT_TIMEZONE,
+  type InboxSettings,
+  type CalendarSettings,
+  type AISettings,
+  type UserPreferences,
 } from "@/server/db/schema/settings";
 import { AccountSection } from "@/components/main/settings/account-section";
 import { InboxSection } from "@/components/main/settings/inbox-section";
@@ -75,6 +76,7 @@ function SettingsContent() {
         workdayStart: "09:00",
         workdayEnd: "18:00",
         meetingBuffer: "30min",
+        timezone: DEFAULT_TIMEZONE,
       },
   );
   const [aiForm, setAIForm] = useState<AISettings>(
@@ -115,7 +117,7 @@ function SettingsContent() {
   return (
     <div className="flex flex-col h-full min-h-0 w-full">
       {/* Sticky header */}
-      <div className="shrink-0 relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-orange-300/50 after:to-transparent">
+      <div className="shrink-0 relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-linear-to-r after:from-transparent after:via-orange-300/50 after:to-transparent">
         <div className="mx-auto flex max-w-xl items-center justify-between px-8 py-4">
           <div>
             <h2 className="text-sm font-semibold text-foreground">
