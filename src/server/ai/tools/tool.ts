@@ -8,6 +8,27 @@ import { CalendarAgentPrefs } from "../prompts/calendar-agent.prompt";
 import { buildEmailComposerAgent } from "../agents/email-composer.agent";
 import { buildCalendarAgent } from "../agents/calendar.agent";
 
+const mcpToolsCache = new Map<string, ToolSet>();
+
+export function invalidateMcpCache(userId: string) {
+  mcpToolsCache.delete(userId);
+}
+
+async function getMcpTools(userId: string): Promise<ToolSet> {
+  if (mcpToolsCache.has(userId)) return mcpToolsCache.get(userId)!;
+
+  const tenant = corsair.withTenant(userId);
+  const [clientTransport, serverTransport] =
+    InMemoryTransport.createLinkedPair();
+  const server = createBaseMcpServer({ corsair: tenant });
+  await server.connect(serverTransport);
+  const client = await createMCPClient({ transport: clientTransport });
+  const tools = await client.tools();
+
+  mcpToolsCache.set(userId, tools);
+  return tools;
+}
+
 export async function createEmailsTools(
   userId: string,
   userName: string,
@@ -16,16 +37,7 @@ export async function createEmailsTools(
   signature?: string,
   calendarPrefs?: CalendarAgentPrefs,
 ): Promise<ToolSet> {
-  const tenant = corsair.withTenant(userId);
-
-  const [clientTransport, serverTransport] =
-    InMemoryTransport.createLinkedPair();
-
-  const server = createBaseMcpServer({ corsair: tenant });
-  await server.connect(serverTransport);
-
-  const client = await createMCPClient({ transport: clientTransport });
-  const mcpTools = await client.tools();
+  const mcpTools = await getMcpTools(userId);
 
   return {
     ...mcpTools,

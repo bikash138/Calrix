@@ -15,13 +15,13 @@ import {
   Moon,
   LogOut,
   Search,
-  Sparkles,
   ArrowUp,
   Maximize2,
   Minimize2,
   X,
 } from "lucide-react";
 import Image from "next/image";
+import { LogoMark } from "@/assets/logo";
 import { authClient } from "@/server/better-auth/client";
 import { CommandDialog } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
@@ -322,7 +322,7 @@ export function CommandBar() {
                 : "border-transparent text-muted-foreground hover:text-foreground",
             )}
           >
-            <Sparkles className="h-3 w-3" />
+            <LogoMark size={16} />
             Ask AI
           </button>
           <button

@@ -7,7 +7,7 @@ import { LogoWithText } from "@/assets/logo-with-text";
 import { XIcon } from "@/assets/x-icon";
 import { LinkedInIcon } from "@/assets/linkedin-icon";
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },

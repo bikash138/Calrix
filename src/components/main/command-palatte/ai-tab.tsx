@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { LogoMark } from "@/assets/logo";
 import type { UIMessage } from "ai";
 import { cn } from "@/lib/utils";
 import { getMessageText } from "@/hooks/use-streaming-chat";
@@ -87,7 +87,7 @@ export function AiTab({ messages, onExampleClick, maximized }: Props) {
         )}
       >
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-950/40">
-          <Sparkles className="h-5 w-5 text-blue-900" />
+          <LogoMark size={20} />
         </div>
         <div className="text-center">
           <p className="text-sm font-medium text-foreground">Ask anything</p>
@@ -129,7 +129,7 @@ export function AiTab({ messages, onExampleClick, maximized }: Props) {
           >
             {msg.role === "assistant" && (
               <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-950/60">
-                <Sparkles className="h-3 w-3 text-blue-900" />
+                <LogoMark size={14} />
               </div>
             )}
             <div

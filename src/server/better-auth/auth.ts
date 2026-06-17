@@ -5,10 +5,27 @@ import { z } from "zod";
 import { env } from "@/env";
 import { db } from "@/server/db";
 import * as authSchema from "@/server/db/schema/auth";
-// import { gmailWatch } from "@/server/db/schema/gmail";
-// import { TriageRunTrigger } from "@/server/db/schema/triage";
+import { gmailWatch } from "@/server/db/schema/gmail";
+import { TriageRunTrigger } from "@/server/db/schema/triage";
 import { inngest } from "@/server/inngest/client";
+
 import { corsair } from "../corsair";
+import { invalidateMcpCache } from "../ai/tools/tool";
+
+/**
+ * Google access-token expiry as epoch seconds (corsair's format). Storing this
+ * lets corsair reuse a valid cached token instead of force-refreshing on every
+ * cold call — which otherwise causes concurrent refreshes of the same refresh
+ * token to race and fail intermittently. Falls back to ~58 min from now.
+ */
+function tokenExpirySeconds(account: {
+  accessTokenExpiresAt?: Date | null;
+}): string {
+  const ms = account.accessTokenExpiresAt
+    ? new Date(account.accessTokenExpiresAt).getTime()
+    : Date.now() + 3500_000;
+  return String(Math.floor(ms / 1000));
+}
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -46,6 +63,12 @@ export const auth = betterAuth({
     account: {
       create: {
         after: async (account) => {
+          console.log("[auth:account.create]", {
+            providerId: account.providerId,
+            userId: account.userId,
+            hasAccessToken: !!account.accessToken,
+            hasRefreshToken: !!account.refreshToken,
+          });
           if (
             account.providerId === "google" &&
             account.accessToken &&
@@ -54,16 +77,19 @@ export const auth = betterAuth({
             try {
               await setupCorsair(corsair, { tenantId: account.userId });
               const tenant = corsair.withTenant(account.userId);
+              const expiresAt = tokenExpirySeconds(account);
 
               await Promise.all([
                 tenant.gmail.keys.set_access_token(account.accessToken),
                 tenant.gmail.keys.set_refresh_token(account.refreshToken),
+                tenant.gmail.keys.set_expires_at(expiresAt),
                 tenant.googlecalendar.keys.set_access_token(
                   account.accessToken,
                 ),
                 tenant.googlecalendar.keys.set_refresh_token(
                   account.refreshToken,
                 ),
+                tenant.googlecalendar.keys.set_expires_at(expiresAt),
               ]);
 
               const watchRes = await fetch(
@@ -84,23 +110,23 @@ export const auth = betterAuth({
                 const watchData = z
                   .object({ expiration: z.string().optional() })
                   .parse(await watchRes.json());
-                // await db
-                //   .insert(gmailWatch)
-                //   .values({
-                //     userId: account.userId,
-                //     watchExpiry: watchData.expiration
-                //       ? new Date(Number(watchData.expiration))
-                //       : null,
-                //   })
-                // .onConflictDoUpdate({
-                //   target: [gmailWatch.userId],
-                //   set: {
-                //     watchExpiry: watchData.expiration
-                //       ? new Date(Number(watchData.expiration))
-                //       : null,
-                //     updatedAt: new Date(),
-                //   },
-                // });
+                await db
+                  .insert(gmailWatch)
+                  .values({
+                    userId: account.userId,
+                    watchExpiry: watchData.expiration
+                      ? new Date(Number(watchData.expiration))
+                      : null,
+                  })
+                  .onConflictDoUpdate({
+                    target: [gmailWatch.userId],
+                    set: {
+                      watchExpiry: watchData.expiration
+                        ? new Date(Number(watchData.expiration))
+                        : null,
+                      updatedAt: new Date(),
+                    },
+                  });
               } else {
                 console.error(
                   "[auth] gmail watch registration failed",
@@ -108,17 +134,26 @@ export const auth = betterAuth({
                 );
               }
 
-              // inngest
-              //   .send({
-              //     name: "triage/user.requested",
-              //     data: {
-              //       userId: account.userId,
-              //       trigger: TriageRunTrigger.MANUAL,
-              //     },
-              //   })
-              //   .catch((err) =>
-              //     console.error("[auth] inngest send failed", err),
-              //   );
+              inngest
+                .send({
+                  name: "triage/user.requested",
+                  data: {
+                    userId: account.userId,
+                    trigger: TriageRunTrigger.MANUAL,
+                  },
+                })
+                .catch((err) =>
+                  console.error("[auth] inngest send failed", err),
+                );
+
+              inngest
+                .send({
+                  name: "contacts/sync",
+                  data: { userId: account.userId },
+                })
+                .catch((err) =>
+                  console.error("[auth] contacts sync send failed", err),
+                );
             } catch (err) {
               console.error("[auth] account provisioning failed", err);
             }
@@ -130,16 +165,22 @@ export const auth = betterAuth({
           if (account.providerId === "google" && account.accessToken) {
             try {
               const tenant = corsair.withTenant(account.userId);
-              await tenant.gmail.keys.set_access_token(account.accessToken);
-              await tenant.googlecalendar.keys.set_access_token(
-                account.accessToken,
-              );
+              const expiresAt = tokenExpirySeconds(account);
+              await Promise.all([
+                tenant.gmail.keys.set_access_token(account.accessToken),
+                tenant.gmail.keys.set_expires_at(expiresAt),
+                tenant.googlecalendar.keys.set_access_token(
+                  account.accessToken,
+                ),
+                tenant.googlecalendar.keys.set_expires_at(expiresAt),
+              ]);
               if (account.refreshToken) {
                 await tenant.gmail.keys.set_refresh_token(account.refreshToken);
                 await tenant.googlecalendar.keys.set_refresh_token(
                   account.refreshToken,
                 );
               }
+              invalidateMcpCache(account.userId);
             } catch (err) {
               console.error("[auth] token refresh failed", err);
             }
