@@ -1,6 +1,6 @@
 import { Inngest } from "inngest";
 import { env } from "@/env";
-// import type { TriageRunTrigger } from "@/server/db/schema/triage";
+import type { TriageRunTrigger } from "@/server/db/schema/triage";
 
 export const inngest = new Inngest({
   id: "calrix",
@@ -11,7 +11,7 @@ export type TriageUserRequestedEvent = {
   name: "triage/user.requested";
   data: {
     userId: string;
-    // trigger: TriageRunTrigger;
+    trigger: TriageRunTrigger;
   };
 };
 
