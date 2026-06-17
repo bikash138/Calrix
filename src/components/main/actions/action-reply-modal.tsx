@@ -18,6 +18,7 @@ import { formatFullDate } from "@/lib/inbox-utils";
 import { inboxApi } from "@/lib/api-client/inbox.api";
 import { actionsApi } from "@/lib/api-client/actions.api";
 import { LogoMark } from "@/assets/logo";
+import { DroppingBallLoader } from "@/components/ui/dropping-ball-loader";
 import type { UIActionItem } from "../actions-count-provider";
 import {
   Dialog,
@@ -258,8 +259,8 @@ export function ActionReplyModal({
           </p>
           <div className="mb-4 max-h-48 overflow-y-auto rounded-xl border border-border/70 bg-muted/20 divide-y divide-border/50">
             {threadLoading ? (
-              <div className="flex items-center justify-center gap-2 py-6 text-xs text-muted-foreground">
-                <Loader2 className="h-3.5 w-3.5 animate-spin" /> Loading thread…
+              <div className="flex items-center justify-center py-6">
+                <DroppingBallLoader size={32} label="Getting your thread" />
               </div>
             ) : thread && thread.messages.length > 0 ? (
               thread.messages.map((m) => (

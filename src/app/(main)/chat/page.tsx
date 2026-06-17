@@ -13,6 +13,7 @@ import {
   REQUEST_INPUT_PART_TYPE,
 } from "@/hooks/use-streaming-chat";
 import { InputWidget } from "@/components/main/chat/input-widgets";
+import { DroppingBallLoader } from "@/components/ui/dropping-ball-loader";
 import { useContactMentions } from "@/hooks/use-contact-mentions";
 import {
   Popover,
@@ -261,6 +262,11 @@ export default function ChatPage() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Bouncing-ball intro above the input: it keeps bouncing until the user
+  // focuses the input, then fades out and unmounts entirely.
+  const [introVisible, setIntroVisible] = useState(true);
+  const [introMounted, setIntroMounted] = useState(true);
+
   const isStreaming = status === "submitted" || status === "streaming";
   const pending = useMemo(() => getPendingUserInput(messages), [messages]);
 
@@ -318,8 +324,15 @@ export default function ChatPage() {
     (!lastMsg ||
       (lastMsg.role === "assistant" && getMessageText(lastMsg) === ""));
 
+  // Never auto-focus on mount (so the intro ball keeps bouncing until the user
+  // focuses the input). Only refocus when a populated chat is cleared back to
+  // empty.
+  const prevHasMessages = useRef(hasMessages);
   useEffect(() => {
-    if (!hasMessages) textareaRef.current?.focus();
+    if (prevHasMessages.current && !hasMessages) {
+      textareaRef.current?.focus();
+    }
+    prevHasMessages.current = hasMessages;
   }, [hasMessages]);
 
   useEffect(() => {
@@ -368,7 +381,21 @@ export default function ChatPage() {
   }
 
   const inputBar = (
-    <div className="w-full max-w-4xl">
+    <div className="relative w-full max-w-4xl">
+      {introMounted && (
+        <div
+          className={cn(
+            "pointer-events-none absolute bottom-full left-1 transition-opacity duration-500 ease-out",
+            introVisible ? "opacity-100" : "opacity-0",
+          )}
+          onTransitionEnd={() => {
+            if (!introVisible) setIntroMounted(false);
+          }}
+        >
+          <DroppingBallLoader size={28} className="items-start" />
+        </div>
+      )}
+
       {/* Limit banners */}
       {atLimit && !pending && (
         <div className="mb-2 flex items-center justify-between rounded-xl bg-red-50 px-4 py-2 text-xs text-red-600 dark:bg-red-950/40 dark:text-red-400">
@@ -415,6 +442,7 @@ export default function ChatPage() {
               <textarea
                 ref={textareaRef}
                 value={query}
+                onFocus={() => setIntroVisible(false)}
                 onChange={(e) => {
                   setQuery(e.target.value);
                   mentions.sync(
