@@ -340,7 +340,7 @@ const SETTINGS_SUB = [
 
 function Sidebar() {
   return (
-    <div className="flex w-[160px] shrink-0 flex-col border-r border-black/8 bg-white/30 py-1 backdrop-blur-sm">
+    <div className="hidden w-[160px] shrink-0 flex-col border-r border-black/8 bg-white/30 py-1 backdrop-blur-sm md:flex">
       {/* User row */}
       <div className="flex items-center gap-2 px-2.5 py-2">
         <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-[8px] font-semibold text-primary-foreground">
@@ -442,7 +442,7 @@ function TopBar() {
 export function HeroMock() {
   return (
     <div
-      className="flex h-full w-full overflow-hidden rounded-[22px]"
+      className="flex h-auto w-full overflow-hidden rounded-[22px] md:h-full"
       style={{
         backgroundImage: `url('${backgroundImg.src}')`,
         backgroundSize: "cover",
@@ -451,17 +451,14 @@ export function HeroMock() {
     >
       <Sidebar />
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden border-l border-black/8">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden md:border-l md:border-black/8">
         <TopBar />
 
         {/* Bento grid */}
         <div className="flex-1 overflow-hidden p-2">
-          <div
-            className="grid h-full grid-cols-3 gap-2"
-            style={{ gridTemplateRows: "1fr 1fr 1.4fr" }}
-          >
+          <div className="grid grid-cols-1 gap-2 md:h-full md:grid-cols-3 md:grid-rows-[1fr_1fr_1.4fr]">
             {/* Needs Reply — col-span-2 row-span-2 */}
-            <BentoCard className="col-span-2 row-span-2">
+            <BentoCard className="md:col-span-2 md:row-span-2">
               <CardHeader
                 icon="↩"
                 iconColor="text-rose-500"
@@ -475,7 +472,7 @@ export function HeroMock() {
             </BentoCard>
 
             {/* Meetings */}
-            <BentoCard className="col-span-1 row-span-2">
+            <BentoCard className="md:col-span-1 md:row-span-2">
               <div className="flex shrink-0 items-center border-b border-border/60 px-3 py-2">
                 <span className="text-[11px] text-blue-500">▦</span>
                 <span className="ml-2 text-[8.5px] font-semibold uppercase tracking-widest text-muted-foreground">
@@ -519,7 +516,7 @@ export function HeroMock() {
             </BentoCard>
 
             {/* Needs Approval */}
-            <BentoCard>
+            <BentoCard className="hidden md:flex">
               <CardHeader
                 icon="✓"
                 iconColor="text-amber-500"
@@ -533,7 +530,7 @@ export function HeroMock() {
             </BentoCard>
 
             {/* Waiting */}
-            <BentoCard>
+            <BentoCard className="hidden md:flex">
               <CardHeader
                 icon="⏳"
                 iconColor="text-violet-500"
@@ -547,7 +544,7 @@ export function HeroMock() {
             </BentoCard>
 
             {/* Overdue */}
-            <BentoCard>
+            <BentoCard className="hidden md:flex">
               <CardHeader
                 icon="⏰"
                 iconColor="text-zinc-400"

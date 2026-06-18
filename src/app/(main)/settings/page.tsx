@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePreferencesStore } from "@/store/preferences.store";
 import { settingsApi } from "@/lib/api-client/settings.api";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   DEFAULT_TIMEZONE,
   type InboxSettings,
@@ -109,6 +110,9 @@ function SettingsContent() {
       const res = await settingsApi.update(preferences);
       qc.setQueryData(["settings"], res);
       usePreferencesStore.getState().hydrate(preferences);
+      toast.success("Settings saved");
+    } catch {
+      toast.error("Failed to save settings");
     } finally {
       setIsSaving(false);
     }

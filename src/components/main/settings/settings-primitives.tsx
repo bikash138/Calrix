@@ -38,7 +38,7 @@ export function Row({
   last = false,
 }: {
   label: string;
-  description?: string;
+  description?: React.ReactNode;
   children: React.ReactNode;
   last?: boolean;
 }) {

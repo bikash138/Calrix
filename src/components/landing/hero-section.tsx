@@ -86,10 +86,7 @@ export default function HeroSection() {
               className="rounded-4xl p-[14px] backdrop-blur-md"
               style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.14)" }}
             >
-              <div
-                className="overflow-hidden rounded-[22px] shadow-[0_32px_50px_-26px_rgba(255,64,0,0.3)]"
-                style={{ aspectRatio: "16/9" }}
-              >
+              <div className="overflow-hidden rounded-[22px] shadow-[0_32px_50px_-26px_rgba(255,64,0,0.3)] md:aspect-video">
                 <HeroMock />
               </div>
             </div>

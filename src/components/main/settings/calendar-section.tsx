@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -7,6 +10,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   CAL_VIEW_LABEL,
   WEEK_START_LABEL,
@@ -23,6 +38,83 @@ import type {
   CalendarSettings,
 } from "@/server/db/schema/settings";
 import { SegmentedControl, Row, Group } from "./settings-primitives";
+
+const TIMEZONES: string[] =
+  typeof Intl.supportedValuesOf === "function"
+    ? Intl.supportedValuesOf("timeZone")
+    : [];
+
+function timezoneLabel(tz: string): string {
+  try {
+    const offset = new Intl.DateTimeFormat("en-US", {
+      timeZone: tz,
+      timeZoneName: "shortOffset",
+    })
+      .formatToParts(new Date())
+      .find((p) => p.type === "timeZoneName")?.value;
+    return offset ? `${tz.replace(/_/g, " ")} (${offset})` : tz.replace(/_/g, " ");
+  } catch {
+    return tz.replace(/_/g, " ");
+  }
+}
+
+function TimezoneCombobox({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (tz: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const options = TIMEZONES.includes(value)
+    ? TIMEZONES
+    : [value, ...TIMEZONES];
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          aria-expanded={open}
+          className="flex h-7 w-[220px] items-center justify-between gap-2 rounded-md border border-border bg-transparent px-3 text-[0.72rem] text-foreground transition-colors hover:bg-muted/40 cursor-pointer"
+        >
+          <span className="truncate">{timezoneLabel(value)}</span>
+          <ChevronsUpDown className="size-3.5 shrink-0 opacity-50" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[260px]" align="end">
+        <Command>
+          <CommandInput
+            placeholder="Search timezone…"
+            className="h-10 text-[0.8rem]"
+            wrapperClassName="border-t-0 px-3"
+          />
+          <CommandList>
+            <CommandEmpty>No timezone found.</CommandEmpty>
+            {options.map((tz) => (
+              <CommandItem
+                key={tz}
+                value={`${tz} ${timezoneLabel(tz)}`}
+                onSelect={() => {
+                  onChange(tz);
+                  setOpen(false);
+                }}
+                className="text-[0.78rem]"
+              >
+                <span className="truncate">{timezoneLabel(tz)}</span>
+                <Check
+                  className={cn(
+                    "ml-auto size-3.5",
+                    tz === value ? "opacity-100" : "opacity-0",
+                  )}
+                />
+              </CommandItem>
+            ))}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 export function CalendarSection({
   form,
@@ -57,6 +149,19 @@ export function CalendarSection({
                 .find(([, v]) => v === label)?.[0];
               if (raw) onChange({ weekStartsOn: raw });
             }}
+          />
+        </Row>
+      </Group>
+
+      <Group title="Timezone">
+        <Row
+          label="Timezone"
+          description="Used when scheduling events"
+          last
+        >
+          <TimezoneCombobox
+            value={form.timezone}
+            onChange={(tz) => onChange({ timezone: tz })}
           />
         </Row>
       </Group>

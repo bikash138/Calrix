@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useChat, Chat } from "@ai-sdk/react";
 import {
   DefaultChatTransport,
@@ -33,7 +34,15 @@ export const chatSession = new Chat({
 });
 
 export function useStreamingChat() {
-  return useChat({ chat: chatSession });
+  return useChat({
+    chat: chatSession,
+    onError(error) {
+      const status = (error as { status?: number }).status;
+      if (status === 429) {
+        toast.error("You're sending messages too fast. Please slow down.");
+      }
+    },
+  });
 }
 
 // ---------------------------------------------------------------------------

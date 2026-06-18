@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   ROLE_LABEL,
   VOLUME_LABEL,
@@ -23,6 +25,9 @@ import type {
   AISettings,
 } from "@/server/db/schema/settings";
 import { SegmentedControl, Row, Group } from "./settings-primitives";
+import { contactsApi } from "@/lib/api-client/contacts.api";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function AISection({
   form,
@@ -31,6 +36,29 @@ export function AISection({
   form: AISettings;
   onChange: (patch: Partial<AISettings>) => void;
 }) {
+  const [syncing, setSyncing] = useState(false);
+
+  const { data: quota, refetch: refetchQuota } = useQuery({
+    queryKey: ["contacts-sync-quota"],
+    queryFn: () => contactsApi.getSyncQuota(),
+    staleTime: 1000 * 60,
+  });
+
+  const canSync = (quota?.remaining ?? 1) > 0;
+
+  const handleSync = async () => {
+    setSyncing(true);
+    try {
+      await contactsApi.sync();
+      toast.success("Contact sync started. This may take a moment.");
+      refetchQuota();
+    } catch {
+      // 429 toast is handled by the axios interceptor
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   return (
     <div>
       <Group title="About You">
@@ -135,6 +163,33 @@ export function AISection({
             checked={form.trainingOptOut}
             onCheckedChange={(v) => onChange({ trainingOptOut: v })}
           />
+        </Row>
+      </Group>
+
+      <Group title="Contacts">
+        <Row
+          label="Sync contacts"
+          description={
+            <span className="flex flex-col gap-0.5">
+              <span>Scans your sent mail to build your contact book.</span>
+              <span className={canSync ? "text-muted-foreground" : "text-destructive/70"}>
+                {canSync
+                  ? `${quota?.remaining ?? "–"}/3 syncs remaining today.`
+                  : "Daily limit reached. Resets in 24 hours."}
+              </span>
+            </span>
+          }
+          last
+        >
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={syncing || !canSync}
+            onClick={handleSync}
+            className="h-7 cursor-pointer text-[0.72rem]"
+          >
+            {syncing ? "Syncing…" : "Sync now"}
+          </Button>
         </Row>
       </Group>
     </div>
