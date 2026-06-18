@@ -66,7 +66,6 @@ export default function HeroSection() {
           alt=""
           aria-hidden
           priority
-          placeholder="blur"
           sizes="(max-width: 768px) 380px, (max-width: 1024px) 520px, 640px"
           className="pointer-events-none absolute left-1/2 z-5 w-[380px] -translate-x-1/2 top-[-160px] md:w-[520px] md:top-[-220px] lg:w-[640px] lg:top-[-280px]"
         />

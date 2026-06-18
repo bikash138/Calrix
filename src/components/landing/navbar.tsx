@@ -162,6 +162,28 @@ export default function Navbar() {
             </motion.nav>
 
             <motion.div
+              className="mt-10"
+              initial={{ opacity: 0, y: reduce ? 0 : 16 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: {
+                  duration: 0.4,
+                  ease: "easeOut",
+                  delay: 0.15 + NAV_LINKS.length * 0.07,
+                },
+              }}
+            >
+              <Link
+                href="/signin"
+                onClick={() => setMenuOpen(false)}
+                className="inline-block rounded-full bg-foreground px-6 py-3 font-display text-lg font-medium text-background transition-colors duration-300 ease-out hover:bg-accent active:opacity-90"
+              >
+                Get Started
+              </Link>
+            </motion.div>
+
+            <motion.div
               className="mt-12 flex flex-col gap-4"
               initial="hidden"
               animate="show"
@@ -170,7 +192,7 @@ export default function Navbar() {
                 show: {
                   transition: {
                     staggerChildren: reduce ? 0 : 0.07,
-                    delayChildren: 0.15 + NAV_LINKS.length * 0.07,
+                    delayChildren: 0.15 + (NAV_LINKS.length + 1) * 0.07,
                   },
                 },
               }}

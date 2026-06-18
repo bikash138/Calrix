@@ -32,8 +32,8 @@ export function SectionHeading({
       }}
       initial={{ backgroundPosition: "100% 100%" }}
       whileInView={{ backgroundPosition: "0% 0%" }}
-      viewport={{ once: false, margin: "-80px" }}
-      transition={{ duration: 2.5, ease: "easeInOut" }}
+      viewport={{ once: false, margin: "0px 0px 220px 0px" }}
+      transition={{ duration: 1.3, ease: "easeInOut" }}
     >
       {children}
     </motion.h2>
@@ -53,7 +53,9 @@ export function StaggeredSectionHeading({
     <h2 className={className}>
       {lines.map((line, i) =>
         reduce ? (
-          <span key={i} className="block">{line}</span>
+          <span key={i} className="block">
+            {line}
+          </span>
         ) : (
           <motion.span
             key={i}
@@ -68,12 +70,12 @@ export function StaggeredSectionHeading({
             }}
             initial={{ backgroundPosition: "100% 100%" }}
             whileInView={{ backgroundPosition: "0% 0%" }}
-            viewport={{ once: false, margin: "-80px" }}
-            transition={{ duration: 2.5, ease: "easeInOut", delay: i * 0.9 }}
+            viewport={{ once: false, margin: "0px 0px 220px 0px" }}
+            transition={{ duration: 1.2, ease: "easeInOut", delay: i * 0.9 }}
           >
             {line}
           </motion.span>
-        )
+        ),
       )}
     </h2>
   );

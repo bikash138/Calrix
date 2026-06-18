@@ -3,6 +3,7 @@ import Link from "next/link";
 import meImg from "@/assets/landing/me.webp";
 import { XIcon } from "@/assets/x-icon";
 import { LinkedInIcon } from "@/assets/linkedin-icon";
+import { LogoWithText } from "@/assets/logo-with-text";
 
 export default function FooterSection() {
   return (
@@ -54,13 +55,9 @@ export default function FooterSection() {
           </div>
 
           <div>
-            <Image
-              src="/icon.svg"
-              alt="Calrix"
-              width={40}
-              height={40}
-              className="mb-7 rounded-sm"
-            />
+            <div className="mb-7">
+              <LogoWithText />
+            </div>
             <h2 className="font-display text-4xl font-medium leading-[1.1] tracking-tight md:text-5xl">
               Your Email &amp; Calendar,
               <br />
@@ -73,13 +70,13 @@ export default function FooterSection() {
               </p>
               <div className="flex items-center gap-6">
                 <Link
-                  href="#pricing"
+                  href="/pricing"
                   className="text-sm text-white/55 transition-colors duration-300 ease-out hover:text-white"
                 >
                   Pricing
                 </Link>
                 <Link
-                  href="#security"
+                  href="/security"
                   className="text-sm text-white/55 transition-colors duration-300 ease-out hover:text-white"
                 >
                   Security

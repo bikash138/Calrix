@@ -5,25 +5,35 @@ import Image from "next/image";
 import footerImg from "@/assets/landing/footer.webp";
 import { GmailIcon } from "@/assets/gmail-icon";
 import { GoogleCalendarIcon } from "@/assets/google-calendar-icon";
-import { EnvelopeIcon } from "@/assets/envelope-icon";
-import { BoltIcon } from "@/assets/bolt-icon";
+import { GoogleIcon } from "@/assets/google-icon";
 import { ClockIcon } from "@/assets/clock-icon";
+import ConnectMock from "@/components/landing/mock-workflows/connect-mock";
+import CorsairMock from "@/components/landing/mock-workflows/corsair-mock";
+import AgentMock from "@/components/landing/mock-workflows/agent-mock";
 
 const STEPS = [
   {
     title: "Gmail & Calendar connect",
-    gradient: "linear-gradient(135deg, #fff1ec 0%, #ffe0d4 60%, #ffd0bc 100%)",
-    icon: <EnvelopeIcon className="h-6 w-6" />,
+    icon: <GoogleIcon />,
+    content: <ConnectMock />,
   },
   {
     title: "Corsair handles the calls",
-    gradient: "linear-gradient(135deg, #eef6ff 0%, #d8eafe 60%, #c2dffd 100%)",
-    icon: <BoltIcon className="h-6 w-6" />,
+    icon: (
+      <Image
+        src="/corsair.svg"
+        alt="Corsair"
+        width={24}
+        height={24}
+        className="h-6 w-6 object-contain"
+      />
+    ),
+    content: <CorsairMock />,
   },
   {
     title: "Calrix Agent processes it",
-    gradient: "linear-gradient(135deg, #f0fdf4 0%, #d1fae5 60%, #a7f3d0 100%)",
     icon: <ClockIcon className="h-6 w-6" />,
+    content: <AgentMock />,
   },
 ];
 
@@ -122,8 +132,15 @@ export default function DiagramSection() {
         className="hidden bg-background md:block"
         style={{ height: "400vh" }}
       >
-        <div className="sticky top-0 bg-background" style={{ height: "100vh" }}>
-          <div className="mx-auto flex h-full w-full max-w-6xl px-6">
+        <div
+          className="sticky top-0 overflow-hidden bg-background"
+          style={{ height: "100vh" }}
+        >
+          {/* Grid background */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e4e4e7_1px,transparent_1px),linear-gradient(to_bottom,#e4e4e7_1px,transparent_1px)] bg-size-[40px_40px] opacity-50" />
+          {/* Radial fade overlay */}
+          <div className="pointer-events-none absolute inset-0 bg-background mask-[radial-gradient(ellipse_at_center,transparent_30%,black)]" />
+          <div className="relative mx-auto flex h-full w-full max-w-6xl px-6">
             <div className="relative flex-1">
               <svg
                 className="pointer-events-none absolute inset-0 h-full w-full"
@@ -131,13 +148,51 @@ export default function DiagramSection() {
                 preserveAspectRatio="none"
                 aria-hidden
               >
+                <defs>
+                  <linearGradient
+                    id="lineGradGmail"
+                    gradientUnits="userSpaceOnUse"
+                    x1="30"
+                    y1="33"
+                    x2="44"
+                    y2="46"
+                  >
+                    <stop offset="0" stopColor="#fb923c" stopOpacity="0" />
+                    <stop offset="0.5" stopColor="#fb923c" stopOpacity="0.9" />
+                    <stop offset="1" stopColor="#f97316" stopOpacity="0.5" />
+                  </linearGradient>
+                  <linearGradient
+                    id="lineGradCal"
+                    gradientUnits="userSpaceOnUse"
+                    x1="60"
+                    y1="33"
+                    x2="44"
+                    y2="46"
+                  >
+                    <stop offset="0" stopColor="#fb923c" stopOpacity="0" />
+                    <stop offset="0.5" stopColor="#fb923c" stopOpacity="0.9" />
+                    <stop offset="1" stopColor="#f97316" stopOpacity="0.5" />
+                  </linearGradient>
+                  <linearGradient
+                    id="lineGradAgent"
+                    gradientUnits="userSpaceOnUse"
+                    x1="44"
+                    y1="57"
+                    x2="44"
+                    y2="68"
+                  >
+                    <stop offset="0" stopColor="#f97316" stopOpacity="0.5" />
+                    <stop offset="0.5" stopColor="#fb923c" stopOpacity="0.9" />
+                    <stop offset="1" stopColor="#fb923c" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
                 <line
                   x1="30"
                   y1="33"
                   x2="44"
                   y2="46"
-                  stroke="rgba(0,0,0,0.18)"
-                  strokeWidth="0.22"
+                  stroke="url(#lineGradGmail)"
+                  strokeWidth="0.3"
                   strokeLinecap="round"
                   pathLength="1"
                   style={drawLine(showLine12, 0)}
@@ -147,8 +202,8 @@ export default function DiagramSection() {
                   y1="33"
                   x2="44"
                   y2="46"
-                  stroke="rgba(0,0,0,0.18)"
-                  strokeWidth="0.22"
+                  stroke="url(#lineGradCal)"
+                  strokeWidth="0.3"
                   strokeLinecap="round"
                   pathLength="1"
                   style={drawLine(showLine12, 120)}
@@ -158,8 +213,8 @@ export default function DiagramSection() {
                   y1="57"
                   x2="44"
                   y2="68"
-                  stroke="rgba(0,0,0,0.18)"
-                  strokeWidth="0.22"
+                  stroke="url(#lineGradAgent)"
+                  strokeWidth="0.3"
                   strokeLinecap="round"
                   pathLength="1"
                   style={drawLine(showLine3, 0)}
@@ -323,9 +378,11 @@ export default function DiagramSection() {
                       </h3>
                     </div>
                     <div
-                      className="mx-4 mb-4 rounded-xl"
-                      style={{ height: "260px", background: s.gradient }}
-                    />
+                      className="mx-4 mb-4 overflow-hidden rounded-xl"
+                      style={{ height: "260px" }}
+                    >
+                      {s.content}
+                    </div>
                   </div>
                 </div>
               ))}

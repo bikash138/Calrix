@@ -34,27 +34,27 @@ type MockThread = {
 
 const THREADS: MockThread[] = [
   {
-    name: "Rima Kumari Shaw",
+    name: "Priya Sharma",
     subject: "URGENT: prod db breaks",
     snippet: "the pipeline is down again",
     time: "3:06 AM",
     unread: true,
   },
   {
-    name: "Bikash Shaw",
+    name: "Daniel Carter",
     subject: "Need your sign-off on the contract",
     snippet: "redlines attached for review",
     time: "2:52 AM",
     unread: true,
   },
   {
-    name: "vshaw138@gmail.com",
+    name: "Maya Reyes",
     subject: "Can we meet Thursday at 10 AM?",
     snippet: "to review the Q3 roadmap",
     time: "1:32 AM",
   },
   {
-    name: "Anita Shaw",
+    name: "Alex Morgan",
     subject: "Sign-off required on Acme",
     snippet: "deadline is tomorrow EOD",
     time: "1:02 AM",
