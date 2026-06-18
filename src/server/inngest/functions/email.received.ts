@@ -1,5 +1,5 @@
 import { generateText, Output } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { google } from "@ai-sdk/google";
 import { z } from "zod";
 import { inngest } from "../client";
 import { notificationChannel } from "../channels";
@@ -83,7 +83,7 @@ export const emailReceived = inngest.createFunction(
     // ── Step 2: Classify (single email, cheap)
     const classified = await step.run("classify", async () => {
       const { output, usage } = await generateText({
-        model: openai("gpt-4o-mini"),
+        model: google("gemini-2.5-flash"),
         output: Output.object({ schema: SingleClassifiedSchema }),
         system: getTriageClassifierPrompt(),
         prompt: `From: ${email.from}\nSubject: ${email.subject}\nSnippet: ${email.snippet}`,
@@ -107,7 +107,7 @@ export const emailReceived = inngest.createFunction(
     // ── Step 3: Autonomy score
     const scored = await step.run("score-autonomy", async () => {
       const { output, usage } = await generateText({
-        model: openai("gpt-4o-mini"),
+        model: google("gemini-2.5-flash"),
         output: Output.object({ schema: SingleAutonomySchema }),
         system: getTriageAutonomyPrompt(),
         prompt: `Category: ${classified.category}\nFrom: ${email.from}\nSubject: ${email.subject}\nSummary: ${classified.aiSummary}\nProposed action: ${classified.suggestedAction}`,
