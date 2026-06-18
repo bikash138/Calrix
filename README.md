@@ -110,6 +110,8 @@ For stack details, architecture, and local setup see [TECHNICALS.md](TECHNICALS.
 
 ---
 
-<div align="center">
-<sub>Built to give you back the hours your inbox quietly steals. <img src="public/icon.svg" alt="Calrix" width="14" height="14" style="vertical-align:-2px;" /> Calrix</sub>
+<div style="display:flex; align-items:center; justify-content:center; gap:5px; font-size:0.85em;">
+  <span>Built to give you back the hours your inbox quietly steals.</span>
+  <img src="public/icon.svg" alt="Calrix" width="14" height="14" />
+  <span>Calrix</span>
 </div>

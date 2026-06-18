@@ -171,7 +171,7 @@ Returns up to 5 matches.
 - Google OAuth credentials (for Gmail + Calendar)
 - An OpenAI API key
 
-### Setup
+### Setup (local)
 
 ```bash
 # 1. Install dependencies
@@ -190,6 +190,25 @@ npm run dev:inngest          # Inngest dev server (background jobs)
 ```
 
 The app runs at **http://localhost:3000**.
+
+### Setup (Docker)
+
+Requires Docker and Docker Compose. PostgreSQL and Redis are included in the compose file — no separate installs needed.
+
+```bash
+# 1. Configure environment
+cp .env.example .env.prod    # then fill in your keys
+
+# 2. Run migrations and seed (first time only)
+docker compose --profile setup up migrate
+
+# 3. Start the app
+docker compose up app
+```
+
+The app runs at **http://localhost:3001**.
+
+> **Note:** The `app` service overrides `DATABASE_URL` and `REDIS_URL` to point at the bundled Postgres (`calrix_postgres`) and Valkey (`calrix_valkey`) containers, so those values in `.env.prod` are ignored at runtime.
 
 ### Handy scripts
 
