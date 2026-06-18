@@ -1,0 +1,64 @@
+services:
+  migrate:
+    build: .
+    container_name: calrix_migrate
+    env_file:
+      - .env.prod
+    environment:
+      DATABASE_URL: postgresql://postgres:1234@postgres:5432/calrix
+    command: sh -c "pnpm db:migrate && pnpm db:reset"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - setup
+
+  app:
+    build: .
+    container_name: calrix_app
+    ports:
+      - "3001:3000"
+    env_file:
+      - .env.prod
+    environment:
+      DATABASE_URL: postgresql://postgres:1234@postgres:5432/calrix
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: calrix_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_DB: calrix
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d calrix"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: valkey/valkey:8-alpine
+    container_name: calrix_valkey
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:

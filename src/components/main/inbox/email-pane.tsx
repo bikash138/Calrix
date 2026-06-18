@@ -4,8 +4,6 @@ import { useState } from "react";
 import {
   Star,
   X,
-  Reply,
-  Forward,
   Archive,
   Trash2,
   Paperclip,
@@ -185,17 +183,6 @@ export function EmailPane({
         )}
       </div>
 
-      {/* Reply bar */}
-      <div className="shrink-0 border-t border-border px-5 py-3">
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-4 py-2.5 text-xs text-muted-foreground">
-          <Reply className="h-3.5 w-3.5 shrink-0" />
-          <span className="flex-1">Reply to {latest?.senderName ?? ""}…</span>
-          <button className="flex items-center gap-1 rounded-md bg-foreground px-2.5 py-1 text-[11px] font-medium text-background transition-colors hover:bg-foreground/80">
-            <Forward className="h-3 w-3" />
-            Forward
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
