@@ -27,10 +27,10 @@ function SignInPageInner() {
   }
 
   return (
-    <div className="relative flex h-screen items-center justify-end overflow-hidden bg-black">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black lg:justify-end">
       {/* Gmail icon — top-left, 3D blurred */}
       <div
-        className="pointer-events-none absolute"
+        className="pointer-events-none absolute hidden lg:block"
         style={{ top: "8%", left: "2%" }}
       >
         <GmailIcon
@@ -47,7 +47,7 @@ function SignInPageInner() {
 
       {/* Calendar icon — bottom-right of left half, 3D blurred */}
       <div
-        className="pointer-events-none absolute"
+        className="pointer-events-none absolute hidden lg:block"
         style={{ bottom: "8%", left: "22%" }}
       >
         <GoogleCalendarIcon
@@ -63,7 +63,7 @@ function SignInPageInner() {
       </div>
 
       {/* Tagline — center of left half */}
-      <div className="pointer-events-none absolute inset-0 flex w-1/2 items-center justify-center px-10">
+      <div className="pointer-events-none absolute inset-0 hidden w-1/2 items-center justify-center px-10 lg:flex">
         <p
           className={`${ranchers.className} text-center text-7xl leading-tight tracking-wider`}
           style={{
@@ -81,10 +81,10 @@ function SignInPageInner() {
         </p>
       </div>
 
-      {/* Card — right half */}
-      <div className="relative z-10 flex h-full w-1/2 flex-col overflow-hidden rounded-l-[5rem]  bg-white shadow-[-40px_0_80px_rgba(0,0,0,0.5)]">
+      {/* Card — full width on mobile, right half on desktop */}
+      <div className="relative z-10 flex min-h-screen w-full flex-col overflow-hidden bg-white shadow-[-40px_0_80px_rgba(0,0,0,0.5)] lg:w-1/2 lg:rounded-l-[5rem]">
         {/* Content */}
-        <div className="relative z-10 flex h-full flex-col px-14 py-12">
+        <div className="relative z-10 flex flex-1 flex-col px-6 py-8 sm:px-10 lg:px-14 lg:py-12">
           {/* Top bar: Logo (fixed) + Privacy Policy */}
           <div className="flex shrink-0 items-center justify-between">
             <Link
@@ -96,9 +96,9 @@ function SignInPageInner() {
                 alt="Calrix"
                 width={42}
                 height={42}
-                className="rounded-md"
+                className="h-7 w-7 rounded-md lg:h-[42px] lg:w-[42px]"
               />
-              <span className="font-[sans-serif] text-3xl font-bold tracking-tight text-gray-900">
+              <span className="font-[sans-serif] text-xl font-bold tracking-tight text-gray-900 lg:text-3xl">
                 Calrix
               </span>
             </Link>
@@ -113,7 +113,7 @@ function SignInPageInner() {
           {/* Center form — grows to fill space */}
           <div className="flex flex-1 flex-col items-center justify-center gap-7 text-center">
             <div className="flex flex-col items-center gap-2">
-              <h1 className="font-display text-6xl font-bold tracking-tight text-gray-900">
+              <h1 className="font-display text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
                 Sign in
               </h1>
               <p className="font-mono text-sm tracking-tight text-gray-500">
@@ -167,7 +167,7 @@ function SignInPageInner() {
               disabled={loading}
               variant="outline"
               size="lg"
-              className="w-64 cursor-pointer gap-3 rounded-full py-5 text-sm font-medium transition-colors"
+              className="w-64 cursor-pointer gap-3 rounded-full border-gray-200 bg-white py-5 text-sm font-medium text-gray-800 shadow-sm"
             >
               {loading ? <SpinnerIcon /> : <GoogleIcon />}
               {loading ? "Signing in…" : "Continue with Google"}

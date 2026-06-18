@@ -273,7 +273,7 @@ export function CommandBar() {
       <button
         onClick={() => setOpen(true)}
         title="Calrix AI (⌘K)"
-        className="fixed bottom-6 right-6 z-50 flex h-13 w-13 items-center justify-center rounded-full bg-gradient-to-br from-orange-100 to-orange-300 transition-all duration-200 hover:scale-105 active:scale-95 dark:from-orange-900/60 dark:to-orange-700/60"
+        className="fixed bottom-6 right-6 z-50 hidden h-13 w-13 items-center justify-center rounded-full bg-gradient-to-br from-orange-100 to-orange-300 transition-all duration-200 hover:scale-105 active:scale-95 md:flex dark:from-orange-900/60 dark:to-orange-700/60"
       >
         <Image
           src="/icon.svg"

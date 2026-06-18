@@ -15,7 +15,11 @@ import {
   Palette,
   Keyboard,
   ChevronUp,
+  LogOut,
+  SunMoon,
 } from "lucide-react";
+import { useTheme } from "next-themes";
+import { authClient } from "@/server/better-auth/client";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -65,7 +69,16 @@ const SETTINGS_SECTIONS = [
 
 function SettingsDrawer({ onSelect }: { onSelect: () => void }) {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const activeSection = searchParams.get("section") ?? "account";
+
+  async function handleSignOut() {
+    onSelect();
+    await authClient.signOut({
+      fetchOptions: { onSuccess: () => router.push("/") },
+    });
+  }
 
   return (
     <div className="absolute bottom-full right-0 mb-2 w-52 overflow-hidden rounded-2xl border border-border/60 bg-background/95 shadow-2xl shadow-black/20 backdrop-blur-xl">
@@ -105,6 +118,29 @@ function SettingsDrawer({ onSelect }: { onSelect: () => void }) {
             </Link>
           );
         })}
+      </div>
+
+      {/* Theme toggle + sign out — only surfaced here on mobile */}
+      <div className="border-t border-border/60 py-1">
+        <button
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="flex w-full items-center gap-3 px-3 py-2.5 text-xs font-medium text-muted-foreground transition-colors duration-100 hover:bg-accent hover:text-foreground"
+        >
+          <SunMoon
+            className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60"
+            strokeWidth={1.8}
+          />
+          <span className="flex-1 text-left">
+            {theme === "dark" ? "Light mode" : "Dark mode"}
+          </span>
+        </button>
+        <button
+          onClick={handleSignOut}
+          className="flex w-full items-center gap-3 px-3 py-2.5 text-xs font-medium text-rose-600 transition-colors duration-100 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/30"
+        >
+          <LogOut className="h-3.5 w-3.5 shrink-0" strokeWidth={1.8} />
+          <span className="flex-1 text-left">Sign out</span>
+        </button>
       </div>
     </div>
   );
@@ -158,6 +194,8 @@ export function MobileBottomNav() {
               <Link
                 key={href}
                 href={href}
+                aria-label={label}
+                title={label}
                 onClick={() => setSettingsOpen(false)}
                 className={cn(
                   "relative flex flex-col items-center gap-1 rounded-xl px-4 py-2 transition-all duration-150",
@@ -170,9 +208,6 @@ export function MobileBottomNav() {
                   className="h-[18px] w-[18px]"
                   strokeWidth={isActive ? 2.2 : 1.8}
                 />
-                <span className="text-[9px] font-semibold leading-none tracking-wide">
-                  {label}
-                </span>
                 {isActive && (
                   <span
                     className={cn(
@@ -189,6 +224,8 @@ export function MobileBottomNav() {
         {/* Settings button — toggles the upward drawer */}
         <button
           onClick={handleSettingsClick}
+          aria-label="Settings"
+          title="Settings"
           className={cn(
             "relative flex flex-col items-center gap-1 rounded-xl px-4 py-2 transition-all duration-150 cursor-pointer",
             onSettings
@@ -204,9 +241,6 @@ export function MobileBottomNav() {
               strokeWidth={onSettings ? 2.2 : 1.8}
             />
           )}
-          <span className="text-[9px] font-semibold leading-none tracking-wide">
-            Settings
-          </span>
           {onSettings && !drawerOpen && (
             <span className="absolute -bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-rose-500" />
           )}

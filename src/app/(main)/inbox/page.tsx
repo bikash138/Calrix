@@ -65,7 +65,9 @@ function InboxContent() {
           <div
             className={cn(
               "flex min-h-0 flex-col overflow-y-auto transition-all",
-              selectedId ? "w-[38%] shrink-0 border-r border-border" : "flex-1",
+              selectedId
+                ? "flex-1 md:w-[38%] md:flex-none md:shrink-0 md:border-r md:border-border"
+                : "flex-1",
             )}
           >
             {isPending ? (
@@ -106,9 +108,10 @@ function InboxContent() {
             )}
           </div>
 
-          {/* Reading pane */}
+          {/* Reading pane — full-screen sheet sliding up from the bottom on
+              mobile, side-by-side split on md+ */}
           {selectedId && (
-            <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+            <div className="fixed inset-0 z-60 flex flex-col overflow-hidden bg-background animate-in slide-in-from-bottom duration-300 md:relative md:inset-auto md:z-auto md:min-h-0 md:min-w-0 md:flex-1 md:animate-none">
               <EmailPane
                 detail={threadDetail}
                 isLoading={isLoadingDetail}

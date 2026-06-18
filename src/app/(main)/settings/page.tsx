@@ -147,7 +147,7 @@ function SettingsContent() {
       </div>
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-xl px-8 py-7">
+        <div className="mx-auto max-w-xl px-8 py-7 pb-24 md:pb-7">
           {section === "account" && <AccountSection />}
           {section === "inbox" && (
             <InboxSection form={inboxForm} onChange={patchInbox} />

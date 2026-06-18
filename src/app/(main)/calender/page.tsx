@@ -401,7 +401,7 @@ function CalendarContent() {
       </div>
 
       {/* Calendar */}
-      <div className="min-h-0 flex-1 overflow-hidden p-3">
+      <div className="min-h-0 flex-1 overflow-hidden p-3 pb-24 md:pb-3">
         <Calendar<RBCEvent>
           localizer={localizer}
           events={rbcEvents}
