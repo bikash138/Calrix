@@ -177,7 +177,7 @@ export default function Navbar() {
               <Link
                 href="/signin"
                 onClick={() => setMenuOpen(false)}
-                className="inline-block rounded-full bg-foreground px-6 py-3 font-display text-lg font-medium text-background transition-colors duration-300 ease-out hover:bg-accent active:opacity-90"
+                className="w-fit py-2 font-display text-3xl font-bold text-foreground transition-opacity duration-300 ease-out hover:opacity-60 active:opacity-100"
               >
                 Get Started
               </Link>
