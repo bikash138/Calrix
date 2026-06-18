@@ -7,12 +7,6 @@ import type { UIMessage } from "ai";
 import { cn } from "@/lib/utils";
 import { getMessageText } from "@/hooks/use-streaming-chat";
 
-const AI_EXAMPLES = [
-  "What meetings do I have tomorrow?",
-  "Summarize unread emails from today",
-  "Block 2 hours on Friday afternoon for deep work",
-];
-
 const THINKING_PHRASES = [
   "hmm…",
   "let me think…",
@@ -67,11 +61,10 @@ function ThinkingIndicator() {
 type Props = {
   messages: UIMessage[];
   isStreaming: boolean;
-  onExampleClick: (example: string) => void;
   maximized?: boolean;
 };
 
-export function AiTab({ messages, onExampleClick, maximized }: Props) {
+export function AiTab({ messages, maximized }: Props) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -94,17 +87,6 @@ export function AiTab({ messages, onExampleClick, maximized }: Props) {
           <p className="mt-1 text-xs text-muted-foreground">
             Say it. Calrix handles it.
           </p>
-        </div>
-        <div className="flex w-full max-w-sm flex-col gap-1.5">
-          {AI_EXAMPLES.map((example) => (
-            <button
-              key={example}
-              onClick={() => onExampleClick(example)}
-              className="rounded-lg border border-zinc-200 px-3 py-2 text-left text-xs text-muted-foreground transition-colors hover:border-zinc-300 hover:text-foreground dark:border-white/10 dark:hover:border-white/20"
-            >
-              {example}
-            </button>
-          ))}
         </div>
       </div>
     );

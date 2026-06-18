@@ -272,21 +272,16 @@ export function CommandBar() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="relative flex shrink-0 items-center gap-1.5 overflow-hidden whitespace-nowrap rounded-md border border-orange-200/60 bg-linear-to-br from-orange-100/60 via-orange-50/40 to-white/60 px-2.5 py-1.5 text-xs shadow-sm backdrop-blur-sm transition-all hover:from-orange-200/70 hover:to-white/80 dark:border-orange-900/40 dark:from-orange-950/60 dark:via-zinc-900/50 dark:to-zinc-950/80 dark:hover:border-orange-800/50 dark:hover:from-orange-950/80 dark:hover:to-zinc-950/90"
+        title="Calrix AI (⌘K)"
+        className="fixed bottom-6 right-6 z-50 flex h-13 w-13 items-center justify-center rounded-full bg-gradient-to-br from-orange-100 to-orange-300 transition-all duration-200 hover:scale-105 active:scale-95 dark:from-orange-900/60 dark:to-orange-700/60"
       >
         <Image
           src="/icon.svg"
           alt="Calrix"
-          width={16}
-          height={16}
+          width={28}
+          height={28}
           className="rounded-sm"
         />
-        <span className="hidden sm:inline text-black/75 dark:text-slate-300">
-          Calrix AI
-        </span>
-        <kbd className="hidden sm:inline-flex items-center font-medium text-black/80 dark:text-white">
-          ⌘K
-        </kbd>
       </button>
 
       <CommandDialog
@@ -323,7 +318,7 @@ export function CommandBar() {
             )}
           >
             <LogoMark size={16} />
-            Ask AI
+            Ask
           </button>
           <button
             onClick={() => switchTab("search")}
@@ -420,7 +415,6 @@ export function CommandBar() {
             <AiTab
               messages={messages}
               isStreaming={isStreaming}
-              onExampleClick={setQuery}
               maximized={maximized}
             />
           )}
@@ -484,7 +478,7 @@ export function CommandBar() {
                     placeholder={
                       isStreaming
                         ? "AI is thinking…"
-                        : "Ask AI… (Shift+Enter for new line)"
+                        : "Ask Calrix…"
                     }
                     disabled={isStreaming}
                     rows={1}

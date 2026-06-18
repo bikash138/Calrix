@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { AppSidebar } from "@/components/main/sidebar";
@@ -26,6 +26,7 @@ import {
   type LoadingStep,
 } from "@/components/main/loading-screen";
 import { authApi } from "@/lib/api-client/auth.api";
+import { authClient } from "@/server/better-auth/client";
 import { settingsApi } from "@/lib/api-client/settings.api";
 import { actionsApi } from "@/lib/api-client/actions.api";
 import { onboardingApi } from "@/lib/api-client/onboarding.api";
@@ -63,6 +64,7 @@ export default function MainLayout({
 }) {
   const qc = useQueryClient();
   const pathname = usePathname();
+  const router = useRouter();
   const ranRef = useRef(false);
 
   const [steps, setSteps] = useState<LoadingStep[]>([]);
@@ -135,7 +137,7 @@ export default function MainLayout({
       setInitData({ user: sessionRes!.user, preferences: settingsRes.data });
     };
 
-    run().catch(() => {
+    run().catch(async () => {
       setSteps((prev) => {
         const failedIdx = prev.findIndex((s) => !s.done && !s.error);
         const target = failedIdx === -1 ? 0 : failedIdx;
@@ -145,6 +147,9 @@ export default function MainLayout({
             : s,
         );
       });
+      await delay(1500);
+      await authClient.signOut();
+      router.push("/signin?message=Please+sign+in+again");
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -193,7 +198,6 @@ export default function MainLayout({
               <div className="ml-auto flex items-center gap-2">
                 <TopBarExtrasRight />
                 {pathname !== "/inbox" && <NotificationBell />}
-                {pathname !== "/chat" && <CommandBar />}
               </div>
             </div>
             <div className="flex flex-1 flex-col overflow-hidden">
@@ -201,6 +205,7 @@ export default function MainLayout({
             </div>
             <MobileBottomNav />
           </SidebarInset>
+          {pathname !== "/chat" && <CommandBar />}
         </SidebarProvider>
         <Toaster position="top-right" />
         </UrgentEmailsProvider>

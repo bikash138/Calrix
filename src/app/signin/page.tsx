@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Ranchers } from "next/font/google";
 import { authClient } from "@/server/better-auth/client";
 import { Button } from "@/components/ui/button";
@@ -12,8 +13,10 @@ import { GoogleIcon } from "@/assets/google-icon";
 
 const ranchers = Ranchers({ subsets: ["latin"], weight: "400" });
 
-export default function SignInPage() {
+function SignInPageInner() {
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const message = searchParams.get("message");
 
   async function signInWithGoogle() {
     setLoading(true);
@@ -118,6 +121,12 @@ export default function SignInPage() {
               </p>
             </div>
 
+            {message && (
+              <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                {message}
+              </p>
+            )}
+
             <ul className="w-full max-w-xs space-y-3 text-left">
               {[
                 {
@@ -167,6 +176,14 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense>
+      <SignInPageInner />
+    </Suspense>
   );
 }
 
