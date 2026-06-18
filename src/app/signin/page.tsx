@@ -3,11 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Ranchers } from "next/font/google";
 import { authClient } from "@/server/better-auth/client";
 import { Button } from "@/components/ui/button";
 import { GmailIcon } from "@/assets/gmail-icon";
 import { GoogleCalendarIcon } from "@/assets/google-calendar-icon";
 import { GoogleIcon } from "@/assets/google-icon";
+
+const ranchers = Ranchers({ subsets: ["latin"], weight: "400" });
 
 export default function SignInPage() {
   const [loading, setLoading] = useState(false);
@@ -22,6 +25,59 @@ export default function SignInPage() {
 
   return (
     <div className="relative flex h-screen items-center justify-end overflow-hidden bg-black">
+      {/* Gmail icon — top-left, 3D blurred */}
+      <div
+        className="pointer-events-none absolute"
+        style={{ top: "8%", left: "2%" }}
+      >
+        <GmailIcon
+          style={{
+            width: 200,
+            height: 200,
+            opacity: 0.18,
+            filter: "blur(8px)",
+            transform:
+              "perspective(500px) rotateY(25deg) rotateX(-15deg) rotate(-10deg)",
+          }}
+        />
+      </div>
+
+      {/* Calendar icon — bottom-right of left half, 3D blurred */}
+      <div
+        className="pointer-events-none absolute"
+        style={{ bottom: "8%", left: "22%" }}
+      >
+        <GoogleCalendarIcon
+          style={{
+            width: 180,
+            height: 180,
+            opacity: 0.15,
+            filter: "blur(8px)",
+            transform:
+              "perspective(500px) rotateY(-20deg) rotateX(15deg) rotate(12deg)",
+          }}
+        />
+      </div>
+
+      {/* Tagline — center of left half */}
+      <div className="pointer-events-none absolute inset-0 flex w-1/2 items-center justify-center px-10">
+        <p
+          className={`${ranchers.className} text-center text-7xl leading-tight tracking-wider`}
+          style={{
+            background: "linear-gradient(to right, #fdba74, #f97316, #fdba74)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}
+        >
+          Your brain needs
+          <br />
+          to think, not
+          <br />
+          to click.
+        </p>
+      </div>
+
       {/* Card — right half */}
       <div className="relative z-10 flex h-full w-1/2 flex-col overflow-hidden rounded-l-[5rem]  bg-white shadow-[-40px_0_80px_rgba(0,0,0,0.5)]">
         {/* Content */}
@@ -54,10 +110,10 @@ export default function SignInPage() {
           {/* Center form — grows to fill space */}
           <div className="flex flex-1 flex-col items-center justify-center gap-7 text-center">
             <div className="flex flex-col items-center gap-2">
-              <h1 className="text-5xl font-semibold tracking-tight text-gray-900">
+              <h1 className="font-display text-6xl font-bold tracking-tight text-gray-900">
                 Sign in
               </h1>
-              <p className="text-sm text-gray-500">
+              <p className="font-mono text-sm tracking-tight text-gray-500">
                 Your email &amp; calendar manager
               </p>
             </div>
@@ -66,11 +122,11 @@ export default function SignInPage() {
               {[
                 {
                   icon: <GmailIcon className="h-4 w-4 shrink-0" />,
-                  label: "Triage and draft email replies",
+                  label: "Inbox sorted, replies drafted",
                 },
                 {
                   icon: <GoogleCalendarIcon className="h-4 w-4 shrink-0" />,
-                  label: "Schedule and manage meetings",
+                  label: "Meetings booked, zero scheduling",
                 },
                 {
                   icon: (
@@ -82,7 +138,7 @@ export default function SignInPage() {
                       className="rounded-[3px]"
                     />
                   ),
-                  label: "Calrix AI, which works for you",
+                  label: "An AI agent that works for you",
                 },
               ].map(({ icon, label }) => (
                 <li
