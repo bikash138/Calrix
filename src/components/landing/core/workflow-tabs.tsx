@@ -11,7 +11,12 @@ import tab4Img from "@/assets/landing/workflow-tabs/tab4.webp";
 const TAB_IMAGES = [tab1Img, tab2Img, tab3Img, tab4Img];
 const workflowVideo = "/workflow-video.mp4";
 
-import { TABS, type Tab } from "@/data/workflow-tabs";
+import { TABS } from "@/data/workflow-tabs";
+import CalrixAIMock from "../mock-workflows/calrix-ai-mock";
+import ActionsMock from "../mock-workflows/actions-mock";
+import InboxMock from "../mock-workflows/inbox-mock";
+import CalendarMock from "../mock-workflows/calendar-mock";
+import FollowupsMock from "../mock-workflows/followups-mock";
 
 function NoteIcon() {
   return (
@@ -32,62 +37,6 @@ function NoteIcon() {
         strokeLinecap="round"
       />
     </svg>
-  );
-}
-
-function MetricCard({ tab }: { tab: Tab }) {
-  const match = tab.card.statusValue.match(/(\+\d+%)/);
-  const [before, after] = match
-    ? tab.card.statusValue.split(match[1])
-    : [tab.card.statusValue, ""];
-
-  return (
-    <div className="w-[78%] max-w-sm rounded-3xl bg-[#171717] p-6 ring-1 ring-white/10">
-      <h4 className="font-display text-2xl font-bold tracking-tighter text-white">
-        {tab.card.title}
-      </h4>
-      <p className="mt-1 font-mono text-sm tracking-tighter text-accent">
-        {tab.card.code}
-      </p>
-
-      <svg viewBox="0 0 320 150" className="mt-6 w-full">
-        <defs>
-          <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#22c55e" />
-            <stop offset="0.5" stopColor="#3b82f6" />
-            <stop offset="1" stopColor="#ff4000" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M10 120 C 80 112 110 66 175 64 S 270 36 308 30"
-          fill="none"
-          stroke="url(#lineGrad)"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        <circle cx="308" cy="30" r="5" fill="#ff4000" />
-        <path
-          d="M10 132 C 90 130 150 116 220 110 S 290 102 308 100"
-          fill="none"
-          stroke="#ffffff"
-          strokeOpacity="0.65"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <circle cx="308" cy="100" r="4" fill="#ffffff" />
-      </svg>
-
-      <div className="mt-5 rounded-2xl bg-white/4 p-4">
-        <p className="font-mono text-sm font-medium tracking-tighter text-white">
-          {tab.card.statusLabel}
-        </p>
-        <p className="mt-1 font-mono text-sm tracking-tighter text-white/70">
-          {before}
-          {match && <span className="text-accent">{match[1]}</span>}
-          {after}
-        </p>
-      </div>
-    </div>
   );
 }
 
@@ -198,11 +147,16 @@ export default function WorkflowTabs() {
                   src={TAB_IMAGES[active - 1]}
                   alt=""
                   fill
+                  placeholder="blur"
                   sizes="(max-width: 1152px) 100vw, 1152px"
                   className="object-cover"
                 />
               )}
-              <MetricCard tab={tab} />
+              {active === 0 && <CalrixAIMock />}
+              {active === 1 && <ActionsMock />}
+              {active === 2 && <InboxMock />}
+              {active === 3 && <CalendarMock />}
+              {active === 4 && <FollowupsMock />}
             </div>
           </motion.div>
         </AnimatePresence>

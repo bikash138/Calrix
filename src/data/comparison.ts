@@ -29,6 +29,27 @@ export const COMPARISON_ROWS: ComparisonRow[] = [
     status: "Only when you do it",
   },
   {
+    label: "Email triage",
+    calrix: "Auto-sorted & ranked by urgency",
+    generic: "You sift through it all",
+    ea: "Skims — may miss things",
+    status: "You read every email",
+  },
+  {
+    label: "Acts on its own",
+    calrix: "Handles routine, asks on risky",
+    generic: "Drafts only, never sends",
+    ea: "Acts, but needs briefing",
+    status: "You do every step",
+  },
+  {
+    label: "Reacts to new mail",
+    calrix: "The moment it lands",
+    generic: "Only when you prompt",
+    ea: "When they next check",
+    status: "When you happen to notice",
+  },
+  {
     label: "Writes in your voice",
     calrix: "Learns your tone from history",
     generic: "Generic — needs heavy editing",

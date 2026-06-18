@@ -6,7 +6,7 @@ import { LinkedInIcon } from "@/assets/linkedin-icon";
 
 export default function FooterSection() {
   return (
-    <footer id="security" className="bg-black text-white rounded-t-3xl">
+    <footer id="footer" className="bg-black text-white rounded-t-3xl">
       <div className="mx-auto w-full max-w-6xl px-6 pb-10 pt-16">
         <div className="flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col items-center gap-3">

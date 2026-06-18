@@ -11,9 +11,9 @@ const MotionLink = motion.create(Link);
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Security", href: "#security" },
-  { label: "About", href: "#about" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Security", href: "/security" },
+  { label: "About", href: "#footer" },
 ];
 
 export default function Navbar() {
