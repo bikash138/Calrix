@@ -94,6 +94,12 @@ A quick onboarding tailors Calrix to you:
 
 ---
 
+## Demo
+
+Watch Calrix in action: [View Demo Videos](https://drive.google.com/drive/folders/1cb6jhcIy6j4eAuJFlsE0jyzQJ7qzgPlk)
+
+---
+
 ## 💎 Plans
 
 |                | **Pilot**                                           | **Team**                                                      | **Scale**                                              |
@@ -110,7 +116,7 @@ For stack details, architecture, and local setup see [TECHNICALS.md](TECHNICALS.
 
 ---
 
-<div style="display:flex; align-items:center; justify-content:center; gap:5px; font-size:0.85em;">
+<div style="display:flex; align-items:center; justify-content:center; gap:5px; font-size:0.85em; text-align:center; width:100%;">
   <span>Built to give you back the hours your inbox quietly steals.</span>
   <img src="public/icon.svg" alt="Calrix" width="14" height="14" />
   <span>Calrix</span>
