@@ -30,6 +30,7 @@ import { authClient } from "@/server/better-auth/client";
 import { settingsApi } from "@/lib/api-client/settings.api";
 import { actionsApi } from "@/lib/api-client/actions.api";
 import { onboardingApi } from "@/lib/api-client/onboarding.api";
+import { userFactsApi } from "@/lib/api-client/user-facts.api";
 import { ActionStatus } from "@/server/db/schema/triage";
 import type { OnboardingInput } from "@/server/module/onboarding/onboarding.schema";
 import type { auth } from "@/server/better-auth/auth";
@@ -107,6 +108,10 @@ export default function MainLayout({
       ]);
       qc.setQueryData(["session"], sessionRes);
       markDone(idx++);
+
+      // Warm the durable-memory (user facts) Redis cache so the first chat
+      // message reads from a hot cache. Non-blocking: chat lazy-warms if it fails.
+      void userFactsApi.warm().catch(() => {});
 
       // Personalise the last step now that we have the name
       const firstName = sessionRes!.user.name?.split(" ")[0] ?? "there";
