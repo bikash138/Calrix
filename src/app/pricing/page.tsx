@@ -121,7 +121,7 @@ export default function PricingPage() {
           <p className="mt-10 text-sm text-muted-foreground">
             Questions?{" "}
             <a
-              href="mailto:hello@calrix.ai"
+              href="mailto:support@calrix.in"
               className="underline underline-offset-2 hover:text-foreground"
             >
               Talk to us

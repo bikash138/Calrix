@@ -62,7 +62,7 @@ export default function PricingSection() {
               </div>
 
               <a
-                href="#book"
+                href="/signin"
                 className="mt-6 rounded-full bg-foreground px-6 py-3.5 text-center font-display font-semibold tracking-tight text-background shadow-lg transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-accent hover:shadow-xl active:translate-y-0"
               >
                 {plan.cta}

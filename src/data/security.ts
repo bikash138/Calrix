@@ -6,7 +6,7 @@ export type SecuritySection = {
 export const SECTIONS: SecuritySection[] = [
   {
     title: "What we collect",
-    body: `When you connect your Google account, Calrix requests access to your Gmail and Google Calendar. We read email metadata (sender, subject, timestamp) and calendar events to power triage, drafting, and scheduling features. We do not store the full body of your emails on our servers beyond what is necessary to complete an action you have requested.`,
+    body: `When you connect your Google account, Calrix requests access to your Gmail and Google Calendar. We read email content (sender, subject, timestamp, and message body) and calendar events to power triage, drafting, and scheduling features. We do not store the full body of your emails on our servers beyond what is necessary to complete an action you have requested.`,
   },
   {
     title: "How we use your data",
@@ -21,6 +21,10 @@ export const SECTIONS: SecuritySection[] = [
     body: `Action logs are retained for 90 days so you can review what Calrix did on your behalf. You can request deletion of your data at any time by contacting us. On account deletion we permanently remove all stored data within 30 days.`,
   },
   {
+    title: "Limited Use disclosure",
+    body: `Calrix's use of information received from Google APIs adheres to the Google API Services User Data Policy (https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements. We only use Google user data to provide and improve user-facing features within Calrix. We do not transfer or sell this data, do not use it for advertising, and do not use it to train generalized AI models. No humans read your Google data except with your explicit consent, where necessary for security or to comply with the law, or to operate the service (e.g. debugging an issue you have reported).`,
+  },
+  {
     title: "Security",
     body: `All data is encrypted in transit (TLS 1.3) and at rest (AES-256). OAuth tokens are stored encrypted and are never logged. We undergo regular security reviews and follow industry-standard practices for access control and incident response.`,
   },
@@ -30,6 +34,6 @@ export const SECTIONS: SecuritySection[] = [
   },
   {
     title: "Contact",
-    body: `If you have questions about how we handle your data, email us at privacy@calrix.ai. We aim to respond within 2 business days.`,
+    body: `If you have questions about how we handle your data, email us at support@calrix.in. We aim to respond within 2 business days.`,
   },
 ];
