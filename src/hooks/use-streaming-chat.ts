@@ -25,7 +25,6 @@ export const chatSession = new Chat({
           trigger,
           messageId,
           messages,
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
       };
     },

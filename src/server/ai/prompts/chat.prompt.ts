@@ -3,7 +3,6 @@ import type { AISettings, InboxSettings } from "@/server/db/schema/settings";
 export type ChatPreferences = {
   role: AISettings["role"];
   roleOther: AISettings["roleOther"];
-  summaryStyle: AISettings["summaryStyle"];
   vipSenders: InboxSettings["vipSenders"];
 };
 
@@ -38,7 +37,6 @@ export function getChatSystemPrompt(
     roleLabel
       ? `Role: ${roleLabel}. Tailor your tone and context to this role.`
       : null,
-    `Summary style: ${prefs.summaryStyle === "brief" ? "Keep all email summaries concise — key points only, no filler." : "Provide thorough, detailed summaries covering all relevant points."}`,
     vipNote,
     userFactsBlock || null,
   ]

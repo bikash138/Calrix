@@ -15,7 +15,6 @@ const uiMessageSchema = z.object({
 });
 
 export const chatRequestSchema = z.object({
-  timezone: z.string().optional().default("UTC"),
   // useChat transport extras (ignored server-side but allowed through validation)
   id: z.string().optional(),
   trigger: z.string().optional(),

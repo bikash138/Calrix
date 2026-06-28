@@ -18,7 +18,6 @@ export function MemorySection() {
   const { data, isLoading } = useQuery({
     queryKey: ["user-facts"],
     queryFn: () => userFactsApi.list(),
-    staleTime: 1000 * 60,
   });
 
   const { mutate: remove, isPending } = useMutation({

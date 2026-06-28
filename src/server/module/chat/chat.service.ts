@@ -15,13 +15,12 @@ export const chatService = {
     userName: string,
     body: ChatRequest,
   ): Promise<Response> => {
-    const timezone = body.timezone ?? "UTC";
+    const { ai, calendar, inbox } = (await settingsRepo.findByUserId(userId))!;
+
+    const timezone = calendar.timezone ?? "UTC";
     const currentDate = new Date().toLocaleString("en-US", {
       timeZone: timezone,
     });
-
-    const { ai, calendar, inbox } = (await settingsRepo.findByUserId(userId))!;
-
     const [emailTools, userFactsBlock] = await Promise.all([
       createEmailsTools(
         userId,
@@ -49,7 +48,6 @@ export const chatService = {
         {
           role: ai.role,
           roleOther: ai.roleOther,
-          summaryStyle: ai.summaryStyle,
           vipSenders: inbox.vipSenders,
         },
         userFactsBlock,
