@@ -25,6 +25,7 @@ import type {
   AISettings,
 } from "@/server/db/schema/settings";
 import { SegmentedControl, Row, Group } from "./settings-primitives";
+import { MemorySection } from "./memory-section";
 import { contactsApi } from "@/lib/api-client/contacts.api";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -192,6 +193,13 @@ export function AISection({
           </Button>
         </Row>
       </Group>
+
+      <div className="mb-5">
+        <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-widest text-muted-foreground/60">
+          What Calrix Knows
+        </p>
+        <MemorySection />
+      </div>
     </div>
   );
 }

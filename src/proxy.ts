@@ -6,7 +6,7 @@ const ONBOARDING_ROUTE = "/onboarding";
 const PROTECTED_ROUTES = [
   "/chat",
   "/inbox",
-  "/calender",
+  "/calendar",
   "/actions",
   "/settings",
 ];

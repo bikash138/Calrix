@@ -58,7 +58,7 @@ export function TopBarExtrasRight() {
     );
   }
 
-  if (pathname === "/calender") {
+  if (pathname === "/calendar") {
     return (
       <Suspense>
         <CalendarViewSwitcher />

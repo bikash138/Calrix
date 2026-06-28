@@ -18,7 +18,7 @@ export function CalendarViewSwitcher() {
   function setView(id: string) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("view", id);
-    router.push(`/calender?${params.toString()}`);
+    router.push(`/calendar?${params.toString()}`);
   }
 
   return (

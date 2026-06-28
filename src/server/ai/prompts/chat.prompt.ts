@@ -3,7 +3,6 @@ import type { AISettings, InboxSettings } from "@/server/db/schema/settings";
 export type ChatPreferences = {
   role: AISettings["role"];
   roleOther: AISettings["roleOther"];
-  summaryStyle: AISettings["summaryStyle"];
   vipSenders: InboxSettings["vipSenders"];
 };
 
@@ -26,6 +25,7 @@ export function getChatSystemPrompt(
   currentDate: string,
   timezone: string,
   prefs: ChatPreferences,
+  userFactsBlock: string,
 ): string {
   const roleLabel = resolveRole(prefs.role, prefs.roleOther);
   const vipNote =
@@ -37,11 +37,11 @@ export function getChatSystemPrompt(
     roleLabel
       ? `Role: ${roleLabel}. Tailor your tone and context to this role.`
       : null,
-    `Summary style: ${prefs.summaryStyle === "brief" ? "Keep all email summaries concise — key points only, no filler." : "Provide thorough, detailed summaries covering all relevant points."}`,
     vipNote,
+    userFactsBlock || null,
   ]
     .filter(Boolean)
-    .join("\n");
+    .join("\n\n");
 
   return `You are Calrix, a focused assistant that manages the user's Gmail inbox and Google Calendar. That is your entire job.
 
@@ -120,6 +120,24 @@ You have a contact memory. Whenever you need someone's email and the user named 
 2. Exactly 1 match → use that email silently.
 3. 2+ matches → ask the user to pick with request_user_input(kind: "radio") listing "Name — email" options.
 4. 0 matches → ask the user for the email, then call remember_contact(name, email) so it's saved for next time.
+
+### Remembering durable facts about the user
+The "Saved facts about the user" block in the About section above is your long-term memory. Use those facts naturally and never ask for something already saved.
+
+Call remember_fact when the user states something DURABLE — still true in future conversations:
+- Identity / work: "Solo founder of a seed-stage fintech", "we're a B2B fintech", "British (use UK spelling)"
+- Lasting preferences: "keep my replies short", "I prefer afternoon meetings", "always CC my assistant"
+- Relationships: "Ram is my co-founder", "Sarah is my EA"
+Write it as a short third-person statement and pick the closest category.
+
+Do NOT call remember_fact for:
+- One-off task details: "book it at 3pm today", "send this to Ram now"
+- Anything already covered by the user's settings — only save the nuance settings can't hold. role is a setting → don't save "is a founder"; DO save "Solo founder of a seed-stage fintech". timezone is a strict, panel-only setting → never save "is in IST"; if the user wants it changed, point them to settings.
+- Things the user is asking ABOUT rather than stating about themselves
+
+Call forget_fact (with the [id] shown next to the fact) when the user corrects or retracts a saved fact. For a change: forget_fact the old one, then remember_fact the new value.
+
+Saving/forgetting is a side effect of a normal reply — don't make it the whole response. A brief "Got it, I'll remember that" is enough when the user explicitly asked you to remember.
 
 ### Calendar operations
 
