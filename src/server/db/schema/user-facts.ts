@@ -11,6 +11,22 @@ export const FactCategory = {
 } as const;
 export type FactCategory = (typeof FactCategory)[keyof typeof FactCategory];
 
+export const FACT_CATEGORY_LABEL: Record<FactCategory, string> = {
+  identity: "Identity",
+  preference: "Preferences",
+  relationship: "People",
+  work: "Work context",
+  other: "Other",
+};
+
+export const FACT_CATEGORY_ORDER: FactCategory[] = [
+  "identity",
+  "preference",
+  "relationship",
+  "work",
+  "other",
+];
+
 export const FactSource = {
   USER_STATED: "user_stated",
   INFERRED: "inferred",

@@ -63,7 +63,7 @@ const navItems = [
   { label: "Chat", href: "/chat", icon: DashboardIcon },
   { label: "Actions", href: "/actions", icon: ActionsIcon },
   { label: "Inbox", href: "/inbox", icon: InboxIcon },
-  { label: "Calendar", href: "/calender", icon: CalendarIcon },
+  { label: "Calendar", href: "/calendar", icon: CalendarIcon },
   { label: "Settings", href: "/settings", icon: SettingsNavIcon },
 ];
 
@@ -90,7 +90,7 @@ function SidebarNav() {
     <SidebarMenu className="gap-0.5">
       {navItems.map(({ label, href, icon: Icon }) => {
         // Calendar — toggles mini calendar dropdown
-        if (href === "/calender") {
+        if (href === "/calendar") {
           return (
             <SidebarMenuItem key={href}>
               <div className="flex items-center">
@@ -100,7 +100,7 @@ function SidebarNav() {
                   isActive={pathname === href}
                   className="flex-1"
                 >
-                  <Link href={`/calender?view=${calendarDefaultView}`}>
+                  <Link href={`/calendar?view=${calendarDefaultView}`}>
                     <Icon className="h-3.5 w-3.5" />
                     <span>
                       {label}

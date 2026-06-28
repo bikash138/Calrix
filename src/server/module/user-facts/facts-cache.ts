@@ -1,20 +1,11 @@
 import { redis } from "@/server/lib/redis";
-import { FactCategory } from "@/server/db/schema/user-facts";
+import { FACT_CATEGORY_LABEL, FACT_CATEGORY_ORDER, type FactCategory } from "@/server/db/schema/user-facts";
 import { userFactsRepo, type UserFact } from "./user-facts.repo";
 
 const key = (userId: string) => `user:${userId}:facts`;
 const TTL_SECONDS = 60 * 60 * 6;
 const EMPTY = "__empty__";
 const handle = (id: string) => id.slice(0, 8);
-
-const HEADINGS: Record<FactCategory, string> = {
-  identity: "Identity",
-  relationship: "People",
-  preference: "Preferences",
-  work: "Work context",
-  other: "Other",
-};
-
 
 function render(facts: UserFact[]): string {
   if (facts.length === 0) return "";
@@ -28,10 +19,10 @@ function render(facts: UserFact[]): string {
   const lines = [
     "Saved facts about the user (use them; if the user corrects one, call forget_fact with its [id]):",
   ];
-  for (const cat of Object.keys(HEADINGS) as FactCategory[]) {
+  for (const cat of FACT_CATEGORY_ORDER) {
     const items = byCat.get(cat);
     if (!items?.length) continue;
-    lines.push(`${HEADINGS[cat]}:`);
+    lines.push(`${FACT_CATEGORY_LABEL[cat]}:`);
     for (const f of items) lines.push(`- [${handle(f.id)}] ${f.content}`);
   }
 

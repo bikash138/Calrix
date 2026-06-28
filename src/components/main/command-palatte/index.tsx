@@ -165,7 +165,7 @@ export function CommandBar() {
     enabled: open && !query && activeTab === "search",
     preventDefault: true,
   });
-  useHotkeys("c", () => navigate("/calender"), {
+  useHotkeys("c", () => navigate("/calendar"), {
     enabled: open && !query && activeTab === "search",
     preventDefault: true,
   });
@@ -217,7 +217,7 @@ export function CommandBar() {
         shortcut: "C",
         keywords: ["events", "schedule", "dates"],
         icon: Calendar,
-        action: () => navigate("/calender"),
+        action: () => navigate("/calendar"),
       },
       {
         id: "settings",

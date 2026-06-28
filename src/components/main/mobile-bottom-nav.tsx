@@ -48,7 +48,7 @@ const NAV_ITEMS = [
     dot: "bg-indigo-500",
   },
   {
-    href: "/calender",
+    href: "/calendar",
     label: "Calendar",
     icon: Calendar,
     activeColor: "text-sky-600 dark:text-sky-400",
