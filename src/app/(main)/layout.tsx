@@ -109,8 +109,6 @@ export default function MainLayout({
       qc.setQueryData(["session"], sessionRes);
       markDone(idx++);
 
-      // Warm the durable-memory (user facts) Redis cache so the first chat
-      // message reads from a hot cache. Non-blocking: chat lazy-warms if it fails.
       void userFactsApi.warm().catch(() => {});
 
       // Personalise the last step now that we have the name

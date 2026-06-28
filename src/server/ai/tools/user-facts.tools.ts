@@ -8,9 +8,10 @@ import {
 } from "@/server/module/user-facts/facts-cache";
 
 /**
- * Durable-memory tools for the chat agent. `remember_fact` saves a lasting fact
- * or preference the user states; `forget_fact` removes one they correct or
- * retract. Both write to Postgres (durable) and the Redis hot cache (write-through).
+ * Durable-memory tools for the chat agent. 
+ * `remember_fact` saves a lasting fact or preference the user states; 
+ * `forget_fact` removes one they correct or retract. 
+ * Both write to Postgres (durable) and the Redis hot cache (write-through).
  */
 export function createUserFactsTools(userId: string): ToolSet {
   return {

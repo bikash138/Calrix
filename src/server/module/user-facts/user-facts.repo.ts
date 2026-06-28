@@ -1,4 +1,4 @@
-import { and, asc, eq, ilike, sql } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { db } from "@/server/db";
 import {
   userFacts,
@@ -11,7 +11,7 @@ export type UserFact = {
   id: string;
   category: FactCategory;
   content: string;
-  createdAt: string; // ISO — used to order the rendered block
+  createdAt: string;
 };
 
 export type AddFactResult =
@@ -19,7 +19,6 @@ export type AddFactResult =
   | { ok: false; reason: "empty" | "capped" };
 
 export const userFactsRepo = {
-  /** All facts for a user, oldest first (stable ordering for the block). */
   async listForUser(userId: string): Promise<UserFact[]> {
     const rows = await db
       .select({
@@ -35,11 +34,6 @@ export const userFactsRepo = {
     return rows.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() }));
   },
 
-  /**
-   * Insert a fact. Skips near-duplicates (same category + identical content,
-   * case-insensitive) and enforces the per-user cap. Returns enough for the
-   * caller to update the cache without a second query.
-   */
   async add(
     userId: string,
     input: { category: FactCategory; content: string },
@@ -47,30 +41,26 @@ export const userFactsRepo = {
     const content = input.content.trim();
     if (!content) return { ok: false, reason: "empty" };
 
-    const [dupe] = await db
-      .select({ id: userFacts.id, createdAt: userFacts.createdAt })
-      .from(userFacts)
-      .where(
-        and(
-          eq(userFacts.userId, userId),
-          eq(userFacts.category, input.category),
-          ilike(userFacts.content, content),
-        ),
-      )
-      .limit(1);
-    if (dupe)
+    const { rows: [check] } = await db.execute<{
+      dupe_id: string | null;
+      dupe_created_at: Date | null;
+      total: number;
+    }>(sql`
+      SELECT
+        (SELECT id FROM user_facts WHERE user_id = ${userId} AND category = ${input.category} AND content ILIKE ${content} LIMIT 1) AS dupe_id,
+        (SELECT created_at FROM user_facts WHERE user_id = ${userId} AND category = ${input.category} AND content ILIKE ${content} LIMIT 1) AS dupe_created_at,
+        (SELECT count(*)::int FROM user_facts WHERE user_id = ${userId}) AS total
+    `);
+
+    if (check.dupe_id)
       return {
         ok: true,
-        id: dupe.id,
-        createdAt: dupe.createdAt.toISOString(),
+        id: check.dupe_id,
+        createdAt: (check.dupe_created_at as Date).toISOString(),
         deduped: true,
       };
 
-    const [{ value: total }] = await db
-      .select({ value: sql<number>`count(*)::int` })
-      .from(userFacts)
-      .where(eq(userFacts.userId, userId));
-    if (total >= MAX_FACTS_PER_USER) return { ok: false, reason: "capped" };
+    if (check.total >= MAX_FACTS_PER_USER) return { ok: false, reason: "capped" };
 
     const [row] = await db
       .insert(userFacts)
@@ -90,7 +80,6 @@ export const userFactsRepo = {
     };
   },
 
-  /** Remove by short-id prefix (the 8-char handle shown in the prompt block). */
   async remove(userId: string, shortId: string): Promise<boolean> {
     const id = shortId.trim();
     if (!id) return false;

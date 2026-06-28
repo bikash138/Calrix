@@ -17,7 +17,7 @@ export const FactSource = {
 } as const;
 export type FactSource = (typeof FactSource)[keyof typeof FactSource];
 
-export const MAX_FACTS_PER_USER = 50;
+export const MAX_FACTS_PER_USER = 20;
 
 export const userFacts = pgTable(
   "user_facts",
