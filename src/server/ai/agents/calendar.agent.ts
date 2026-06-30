@@ -68,8 +68,13 @@ export function buildCalendarAgent(
       description,
       attendeeEmails,
     }) => {
+      const model =
+        task === "check_availability"
+          ? openai("gpt-5.1")
+          : openai("gpt-4.1-mini");
+
       const { text } = await generateText({
-        model: openai("gpt-5.5"),
+        model,
         system: getCalendarAgentPrompt(currentDate, timezone, calendarPrefs),
         prompt: `Task: ${task}
                 Intent: ${intent}

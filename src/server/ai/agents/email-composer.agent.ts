@@ -31,7 +31,7 @@ export function buildEmailComposerAgent(userName: string, signature?: string) {
     }),
     execute: async ({ recipientName, subject, intent, context, isReply }) => {
       const { text } = await generateText({
-        model: openai("gpt-5.5"),
+        model: openai("gpt-4.1-mini"),
         system: getEmailComposerPrompt(userName, signature),
         prompt: `${isReply ? "Write a reply email" : "Write a new email"} to ${recipientName}.
                 Intent: ${intent}${subject ? `\nOriginal subject: ${subject}` : ""}${context ? `\nThread:\n${context}` : ""}`,

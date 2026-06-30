@@ -41,7 +41,7 @@ export const chatService = {
     };
 
     const result = streamText({
-      model: openai("gpt-5.1"),
+      model: openai("gpt-4.1"),
       system: getChatSystemPrompt(
         currentDate,
         timezone,
